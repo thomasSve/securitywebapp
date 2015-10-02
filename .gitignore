@@ -30,3 +30,4 @@ project
 *.sublime-project
 .idea
 *.idea/*
+composer.lock
