@@ -101,6 +101,7 @@ On Windows you need to change
 	;extension=php_sqlite3.dll
 	
 to 
+
 	extension=php_sqlite3.dll
 	
 in the previously mentioned php.ini file to get SqLite to work or else you may get "coul not find driver" error.
