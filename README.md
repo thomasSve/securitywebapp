@@ -54,7 +54,7 @@ Copy `php.ini-production` to `php.ini`. Enable openssl by removing leading `;`
 
 from `;extension=php_openssl.dll`. Set `extension_dir` to `ext`.
 Enable the `php_pdo_sqlite.dll` extension.
-
+If you have trouble enabling SSL on Windows see: http://www.herongyang.com/PKI/HTTPS-PHP-Configure-PHP-OpenSSL-on-Windows.html
 ### Linux
 
     apt-get install php5-cli // debian/ubuntu
@@ -89,8 +89,21 @@ Composer is a dependency manager for PHP.
 Install dependencies with
 
     php composer.phar install
+	
+For Windows (in securitywebapp folder):
+	
+	composer install
 
 ## Sqlite3
+
+On Windows you need to change 
+	
+	;extension=php_sqlite3.dll
+	
+to 
+	extension=php_sqlite3.dll
+	
+in the previously mentioned php.ini file to get SqLite to work or else you may get "coul not find driver" error.
 
 This is the database. It is a PHP module usually packaged as a separate
 package in package managers.
