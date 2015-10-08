@@ -9,13 +9,12 @@ class Hash
 
     static $salt = "1234";
 
-
     public function __construct()
     {
     }
     public static function make($plaintext)
     {
-        return hash('sha256', $plaintext . Hash::$salt);
+        return hash('sha256', $plaintext.Hash::$salt);
     }
 
     public function check($plaintext, $hash)

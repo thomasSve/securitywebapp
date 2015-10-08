@@ -41,8 +41,9 @@ class UserController extends Controller
 
         if ($validation->isGoodToGo()) {
             $password = $password;
-            $password = $this->hash->make($password);
-            $user = new User($username, $password, $fullname, $address, $postcode);
+			$salt = $this->generateSalt();
+            $password = $this->hash->make($password, $salt);
+            $user = new User($username, $password, $fullname, $address, $postcode, $salt);
             $this->userRepository->save($user);
 
             $this->app->flash('info', 'Thanks for creating a user. Now log in.');
@@ -53,6 +54,16 @@ class UserController extends Controller
         $this->app->flashNow('error', $errors);
         $this->render('newUserForm.twig', ['username' => $username]);
     }
+	
+	public static function generateSalt($length = 10) {
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		$charactersLength = strlen($characters);
+		$randomString = '';
+		for ($i = 0; $i < $length; $i++) {
+			$randomString .= $characters[rand(0, $charactersLength - 1)];
+		}
+    return $randomString;
+}
 
     public function all()
     {

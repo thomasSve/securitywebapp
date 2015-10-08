@@ -3,6 +3,7 @@
 namespace tdt4237\webapp;
 
 use tdt4237\webapp\models\User;
+use tdt4237\webapp\controllers\UserController;
 
 class Sql
 {
@@ -17,7 +18,7 @@ class Sql
      */
     static function up()
     {
-        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode varchar (4), age varchar(50), bio varhar(50), isadmin INTEGER);";
+        $q1 = "CREATE TABLE users (id INTEGER PRIMARY KEY, user VARCHAR(50), pass VARCHAR(50), email varchar(50) default null, fullname varchar(50), address varchar(50), postcode varchar (4), age varchar(50), bio varhar(50), isadmin INTEGER, salt VARCHAR(50));";
         $q6 = "CREATE TABLE posts (postId INTEGER PRIMARY KEY AUTOINCREMENT, author TEXT, title TEXT NOT NULL, content TEXT NOT NULL, date TEXT NOT NULL, FOREIGN KEY(author) REFERENCES users(user));";
         $q7 = "CREATE TABLE comments(commentId INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, author TEXT NOT NULL, text INTEGER NOT NULL, belongs_to_post INTEGER NOT NULL, FOREIGN KEY(belongs_to_post) REFERENCES posts(postId));";
 
@@ -34,13 +35,16 @@ class Sql
 
     static function insertDummyUsers()
     {
-        $hash1 = Hash::make(bin2hex(openssl_random_pseudo_bytes(2)));
-        $hash2 = Hash::make('bobdylan');
-        $hash3 = Hash::make('liverpool');
+		$salt1 = UserController::generateSalt();
+		$salt2 = UserController::generateSalt();
+		$salt3 = UserController::generateSalt();
+        $hash1 = Hash::make(bin2hex(openssl_random_pseudo_bytes(2)), $salt1);
+        $hash2 = Hash::make('bobdylan', $salt2);
+        $hash3 = Hash::make('liverpool', $salt3);
 
-        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090')";
-        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010')";
-        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120')";
+        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090', '$salt1')";
+        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010', '$salt2')";
+        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120', '$salt3')";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
