@@ -30,7 +30,7 @@ class PostController extends Controller
         $comments = $this->commentRepository->findByPostId($postId);
         $request = $this->app->request;
         $message = $request->get('msg');
-        $variables = [];
+       $variables = [];
 
 
         if($message) {
