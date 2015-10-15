@@ -31,4 +31,4 @@ project
 .idea
 *.idea/*
 composer.lock
-composer.phar
+composer.bat
