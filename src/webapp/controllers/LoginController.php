@@ -37,9 +37,9 @@ class LoginController extends Controller
             $isAdmin = $this->auth->user()->isAdmin();
 
             if ($isAdmin) {
-                setcookie("isadmin", "yes");
+                $_SESSION['isadmin'] = 'yes';
             } else {
-                setcookie("isadmin", "no");
+                $_SESSION["isadmin"] = 'no';
             }
 
             $this->app->flash('info', "You are now successfully logged in as $user.");
