@@ -4,8 +4,8 @@
 
 <h2>User</h2>
 
-{{ flash.info}} <br />
-{{ flash.error}} <br />
+{{ flash.info|e('html_attr')}} <br />
+{{ flash.error|e('html_attr')}} <br />
 
 {% if user %}
     <table>

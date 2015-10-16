@@ -12,7 +12,7 @@
     </tr>
     {% for user in users %}
         <tr>
-            <td>{{ user.userid|raw }}</td>
+            <td>{{ user.userid|e('html_attr') }}</td>
             <td><a href="/user/{{ user.username|e('html_attr') }}">{{ user.username|e('html_attr') }}</a></td>
             <td><a href="/admin/delete/{{ user.username|e('html_attr') }}">Delete this user</a></td>
         </tr>

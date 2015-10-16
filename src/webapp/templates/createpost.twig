@@ -5,7 +5,7 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
 
         <label>Title:</label>
         <input type = "text" name="title"> <br />

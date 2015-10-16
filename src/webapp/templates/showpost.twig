@@ -1,7 +1,7 @@
 {% extends 'base.twig' %}
 
 {% block content %}
-    <h3> {{ flash.msg|raw }}</h3>
+    <h3> {{ flash.msg|e('html_attr') }}</h3>
     {% if post %}
         <h2>{{ post.title|e('html_attr')}}</h2>
         <h3> by {{post.author|e('html_attr')}}</h3>

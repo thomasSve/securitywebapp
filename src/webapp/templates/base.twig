@@ -43,7 +43,7 @@
             </div>
 
             <div id="content">
-                <div id="flashinfo">{{ flash.info|raw }}</div>
+                <div id="flashinfo">{{ flash.info|e('html_attr') }}</div>
                 {% block content %}{% endblock %}
             </div>
         </div>
