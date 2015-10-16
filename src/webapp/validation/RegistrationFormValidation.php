@@ -9,6 +9,7 @@ class RegistrationFormValidation
     const MIN_USER_LENGTH = 3;
     
     private $validationErrors = [];
+    private $userRepository;
     
     public function __construct($username, $password, $fullname, $address, $postcode)
     {
@@ -19,7 +20,11 @@ class RegistrationFormValidation
     {
         return empty($this->validationErrors);
     }
-    
+
+    public function addValidationError($error) {
+        $this->validationErrors[] = $error;
+    }
+
     public function getValidationErrors()
     {
         return $this->validationErrors;
