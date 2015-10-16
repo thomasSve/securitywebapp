@@ -31,6 +31,14 @@ class RegistrationFormValidation
             $this->validationErrors[] = 'Password cannot be empty';
         }
 
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number    = preg_match('@[0-9]@', $password);
+
+        if(!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+            $this->validationErrors[] = "Password must be 8 characters including 1 uppercase, 1 lowercase and 1 number";
+        }
+
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
         }
