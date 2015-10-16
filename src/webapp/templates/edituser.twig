@@ -8,22 +8,22 @@
         <div id="flasherror">{{ flash.error }}</div>
 
         <label>Full name:</label>
-        <input type = "text" name="fullname" value= "{{ user.fullname }}"> <br />
+        <input type = "text" name="fullname" value= "{{ user.fullname|e('html_attr') }}"> <br />
 
         <label>Address:</label>
-        <input type = "text" name="address" value= "{{ user.address }}"> <br />
+        <input type = "text" name="address" value= "{{ user.address|e('html_attr') }}"> <br />
 
         <label>Postcode:</label>
-        <input type = "text" name="postcode"  value= "{{ user.postcode }}"> <br />
+        <input type = "text" name="postcode"  value= "{{ user.postcode|e('html_attr') }}"> <br />
 
         <label>Email:</label>
-        <input type="text" name="email" value="{{ user.email|raw}}"> <br />
+        <input type="text" name="email" value="{{ user.email|e('html_attr')}}"> <br />
 
         <label>Bio:</label>
-        <textarea name="bio">{{ user.bio }}</textarea>
+        <textarea name="bio">{{ user.bio|e('html_attr') }}</textarea>
 
         <label>Age:</label>
-        <input type="text" name="age" value="{{ user.age }}"> <br />
+        <input type="text" name="age" value="{{ user.age|e('html_attr') }}"> <br />
 
         <input type="submit" name="submit" value="Save profile">
     </form>

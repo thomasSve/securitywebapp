@@ -10,7 +10,7 @@
 <form action="" method="POST">
 
     <label>Username: </label>
-    <input type="text" name="user" value="{{ username }}"> <br />
+    <input type="text" name="user" value="{{ username|e('html_attr') }}"> <br />
     <label>Password: </label>
     <input type="text" name="pass"> <br />
     <label>Full Name (Will not be visible for other users)</label>

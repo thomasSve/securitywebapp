@@ -22,7 +22,7 @@
         <div id="container">
             <div id="navbar">
                 {% if isLoggedIn %}
-                    Logged in as {{ loggedInUsername }}.<br>
+                    Logged in as {{ loggedInUsername|e('html_attr') }}.<br>
                     <a href ="{{ urlFor('showposts') }}"> Show posts</a> <br>
                     <a href="{{ urlFor('editprofile') }}">Edit profile</a> <br>
                     <a href="{{ urlFor('createpost') }}"> Create new post</a><br>
