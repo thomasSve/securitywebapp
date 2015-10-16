@@ -95,7 +95,7 @@ class PostController extends Controller
             $author = $request->post('author');
             $date = date("dmY");
 
-            $validation = new PostValidation($title, $author, $content);
+            $validation = new PostValidation($author, $title, $content);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setAuthor($author);

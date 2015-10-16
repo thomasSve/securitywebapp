@@ -25,7 +25,7 @@ class PostValidation {
     public function validate($author, $title, $content)
     {
         if ($author == null) {
-            $this->validationErrors[] = "Forfatter trengs";
+            $this->validationErrors[] = "Author needed";
 
         }
         if ($title == null) {
