@@ -39,7 +39,9 @@ class UserController extends Controller
 
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
-        if ($validation->isGoodToGo()) {
+        if ($this->userRepository->findByUser($username)) {
+            $validation->addValidationError("Username allready exists");
+        } else  if ($validation->isGoodToGo()) {
             $password = $password;
 			$salt = $this->generateSalt();
             $password = $this->hash->make($password, $salt);
