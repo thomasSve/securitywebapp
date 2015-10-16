@@ -22,7 +22,18 @@
             <th>Age:</th>
             <td>{{ user.age|raw }}</td>
             <tr></tr>
-
+            <th>Role:</th>
+            <td>{{ user.role|raw }}</td>
+            {% if isAdmin %}
+            <td>
+                {% if user.isdoctor == 0 %}
+                    <a href="{{ urlFor('changeRole') }}">Set as Doctor</a>
+                {% else %}
+                    <a href="{{ urlFor('changeRole') }}">Set as user</a>
+                {% endif %}
+            </td>
+            {% endif %}
+            <tr></tr>
     </table>
 {% else %}
     Could not find a user with username "{{ username|raw }}".
