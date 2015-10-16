@@ -33,14 +33,17 @@ class PostRepository
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+        $sql  = "SELECT * FROM posts WHERE postId = :postid";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':postid', $postId, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $row = $stmt->fetch();
 
         if($row === false) {
             return false;
         }
-
 
         return $this->makeFromRow($row);
     }
@@ -80,8 +83,9 @@ class PostRepository
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
-            sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+        $stmt = $this->db->prepare("DELETE FROM posts WHERE postid=:postid");
+        $stmt->bindParam(':postid', $postId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
 
@@ -94,10 +98,18 @@ class PostRepository
 
         if ($post->getPostId() === null) {
             $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+                . "VALUES (:title, :author, :content, :date)";
         }
 
-        $this->db->exec($query);
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->bindParam(':author', $author, PDO::PARAM_STR);
+        $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+        $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+
+        $stmt->execute();
+
         return $this->db->lastInsertId();
     }
 }

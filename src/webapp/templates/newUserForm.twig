@@ -12,13 +12,13 @@
     <label>Username: </label>
     <input type="text" name="user" value="{{ username|e('html_attr') }}"> <br />
     <label>Password: </label>
-    <input type="text" name="pass"> <br />
+    <input type="password" name="pass"> <br />
     <label>Full Name (Will not be visible for other users)</label>
     <input type="text" name = "fullname"><br/>
     <label>Address (Will not be visible for other users)</label>
     <input type ="text" name = "address"><br/>
     <label> Postcode (Only four digits please)</label>
-    <input type = "text" name = "postcode"><br/>
+    <input type = "number" maxlength="4" name = "postcode"><br/>
     <input type="submit" name="submit" value="Create new user"> <br/>
 
 </form>
