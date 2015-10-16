@@ -4,42 +4,42 @@
 
 <h2>User</h2>
 
-{{ flash.info}} <br />
-{{ flash.error}} <br />
+{{ flash.info|e('html_attr')}} <br />
+{{ flash.error|e('html_attr')}} <br />
 
 {% if user %}
     <table>
         <tr>
             <th>Id</th>
-            <th>{{ user.userid }}</th>
+            <th>{{ user.userid|e('html_attr') }}</th>
             <tr></tr>
             <th>Username:</th>
-            <td>{{ user.username }}</th>
+            <td>{{ user.username|e('html_attr') }}</th>
             <tr></tr>
             <th>Full Name:</th>
-            <td>{{ user.fullname }}</th>
+            <td>{{ user.fullname|e('html_attr') }}</th>
             <tr></tr>
             <th>Address:</th>
-            <td>{{ user.address }} </td>
+            <td>{{ user.address|e('html_attr') }} </td>
             <tr></tr>
             <th>Postcode:</th>
-            <td>{{  user.postcode }}</td>
+            <td>{{  user.postcode|e('html_attr') }}</td>
             <tr></tr>
             <th>Hash:</th>
             <td>************</td>
             <tr></tr>
             <th>Email:</th>
-            <td>{{ user.email }}</td>
+            <td>{{ user.email|e('html_attr') }}</td>
             <tr></tr>
             <th>Bio:</th>
-            <td>{{ user.bio}}</td>
+            <td>{{ user.bio|e('html_attr')}}</td>
             <tr></tr>
             <th>Age:</th>
-            <td>{{ user.age }}</td>
+            <td>{{ user.age|e('html_attr') }}</td>
             <tr></tr>
     </table>
 {% else %}
-    Could not find a user with username "{{ username|raw }}".
+    Could not find a user with username "{{ username|e('html_attr') }}".
 {% endif %}
 
 {% endblock %}

@@ -18,34 +18,44 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = $this->postRepository->all();
+        if(!$this->auth->guest()) {
+            $posts = $this->postRepository->all();
 
-        $posts->sortByDate();
-        $this->render('posts.twig', ['posts' => $posts]);
+            $posts->sortByDate();
+            $this->render('posts.twig', ['posts' => $posts]);
+        } else {
+                $this->app->redirect('/login');
+                $this->app->flash('info', 'you must log in to do that');
+            }
     }
 
     public function show($postId)
     {
-        $post = $this->postRepository->find($postId);
-        $comments = $this->commentRepository->findByPostId($postId);
-        $request = $this->app->request;
-        $message = $request->get('msg');
-       $variables = [];
+        if(!$this->auth->guest()) {
+            $post = $this->postRepository->find($postId);
+            $comments = $this->commentRepository->findByPostId($postId);
+            $request = $this->app->request;
+            $message = $request->get('msg');
+            $variables = [];
 
 
-        if($message) {
-            $variables['msg'] = $message;
+            if ($message) {
+                $variables['msg'] = $message;
+
+            }
+
+
+            $this->render('showpost.twig', [
+                'post' => $post,
+                'comments' => $comments,
+                'flash' => $variables
+            ]);
 
         }
-
-
-
-
-        $this->render('showpost.twig', [
-            'post' => $post,
-            'comments' => $comments,
-            'flash' => $variables
-        ]);
+        else {
+            $this->app->redirect('/login');
+            $this->app->flash('info', 'you must log in to do that');
+        }
 
     }
 
