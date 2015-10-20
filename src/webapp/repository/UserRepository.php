@@ -74,7 +74,7 @@ class UserRepository
 
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($row === false) {
             return false;
         }
@@ -181,6 +181,20 @@ class UserRepository
 
         $stmt->bindParam(':cardNumber', $cardnumber, PDO::PARAM_STR);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    public function addDoctor($username) {
+        $query = "UPDATE users SET isdoctor=1 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function removeDoctor($username) {
+        $query = "UPDATE users SET isdoctor=0 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         return $stmt->execute();
     }
 }
