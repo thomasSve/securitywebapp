@@ -24,8 +24,9 @@ class PostController extends Controller
             $posts->sortByDate();
             $this->render('posts.twig', ['posts' => $posts]);
         } else {
-                $this->app->redirect('/login');
-                $this->app->flash('info', 'you must log in to do that');
+
+                $this->app->flash('info', 'You must log in to do that');
+             $this->app->redirect('/login');
             }
     }
 
@@ -53,8 +54,9 @@ class PostController extends Controller
 
         }
         else {
-            $this->app->redirect('/login');
+
             $this->app->flash('info', 'you must log in to do that');
+            $this->app->redirect('/login');
         }
 
     }
@@ -73,8 +75,9 @@ class PostController extends Controller
             $this->app->redirect('/posts/' . $postId);
         }
         else {
-            $this->app->redirect('/login');
             $this->app->flash('info', 'you must log in to do that');
+            $this->app->redirect('/login');
+
         }
 
     }
