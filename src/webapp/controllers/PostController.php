@@ -22,7 +22,11 @@ class PostController extends Controller
             $posts = $this->postRepository->all();
 
             $posts->sortByDate();
-            $this->render('posts.twig', ['posts' => $posts]);
+            $user = $this->auth->user();
+            $this->render('posts.twig', [
+                'user' => $user,
+                'posts' => $posts
+            ]);
         } else {
 
                 $this->app->flash('info', 'You must log in to do that');
@@ -38,15 +42,15 @@ class PostController extends Controller
             $request = $this->app->request;
             $message = $request->get('msg');
             $variables = [];
-
+            $user = $this->userRepository->findUser($post->getAuthor());
 
             if ($message) {
                 $variables['msg'] = $message;
 
             }
 
-
             $this->render('showpost.twig', [
+                'user' => $user ,
                 'post' => $post,
                 'comments' => $comments,
                 'flash' => $variables
@@ -54,7 +58,6 @@ class PostController extends Controller
 
         }
         else {
-
             $this->app->flash('info', 'you must log in to do that');
             $this->app->redirect('/login');
         }

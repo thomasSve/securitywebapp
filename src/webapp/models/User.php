@@ -17,7 +17,7 @@ class User
     protected $age;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
-    protected $balance = "0";
+    protected $balance = 0;
     protected $cardNumber;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $salt)

@@ -81,7 +81,6 @@ class Auth
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
     }
-
     public function logout()
     {
         session_destroy();

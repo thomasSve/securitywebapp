@@ -44,10 +44,10 @@ class Sql
         $hash3 = Hash::make('liverpool', $salt3);
         $hash4 = Hash::make('Testuser123', $salt4);
 
-        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090', '$salt1')";
-        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010', '$salt2')";
-        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120', '$salt3')";
-        $q4 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt) VALUES ('testuser', '$hash4', 1, 'admin', 'homebase', '9090', '$salt4')";
+        $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090', '$salt1', 0)";
+        $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('bob', '$hash2', 1, 'Robert Green', 'Greenland Grove 9', '2010', '$salt2', 1)";
+        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('bjarni', '$hash3', 1, 'Bjarni Torgmund', 'Hummerdale 12', '4120', '$salt3', 0)";
+        $q4 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('testuser', '$hash4', 1, 'admin', 'homebase', '9090', '$salt4', 0)";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
