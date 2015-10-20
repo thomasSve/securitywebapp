@@ -102,7 +102,7 @@ class PostController extends Controller
             $request = $this->app->request;
             $title = $request->post('title');
             $content = $request->post('content');
-            $author = $request->post('author');
+            $author = $_SESSION['user'];
             $date = date("dmY");
 
             $validation = new PostValidation($author, $title, $content);
