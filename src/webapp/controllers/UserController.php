@@ -35,7 +35,7 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
-
+        
 
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
@@ -65,7 +65,7 @@ class UserController extends Controller
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
     return $randomString;
-}
+    }
 
     public function all()
     {

@@ -33,7 +33,7 @@ class Auth
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash());
+        return $this->hash->check($password, $user->getSalt(), $user->getHash());
     }
 
     /**
