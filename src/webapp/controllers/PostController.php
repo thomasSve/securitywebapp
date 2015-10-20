@@ -57,7 +57,6 @@ class PostController extends Controller
             }
 
             $this->render('showpost.twig', [
-                'user' => $user ,
                 'post' => $post,
                 'comments' => $comments,
                 'flash' => $variables
