@@ -70,3 +70,8 @@ label {
     border: 1px solid gray;
     margin: 10px;
 }
+
+.doctor_review {
+    border: 5px solid limegreen;
+    margin: 10px;
+}

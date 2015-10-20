@@ -19,7 +19,6 @@ class Post
 
     public function getPostId() {
         return $this->postId;
-
     }
 
     public function setPostId($postId) {

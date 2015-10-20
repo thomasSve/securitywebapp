@@ -9,7 +9,11 @@
         <lb></lb>
         <h2>COMMENTS</h2>
         {% for comment in comments %}
-            <div class="review">
+            {% if not comment.isDoctor %}
+                <div class="review">
+            {% else %}
+                <div class="doctor_review">
+            {% endif %}
                 <b>Author:</b> {{ comment.author|e('html_attr') }} <b> posted on: {{ comment.date|e('html_attr') }} </b>
                 <pre> {{ comment.text|e('html_attr') }}</pre>
             </div>

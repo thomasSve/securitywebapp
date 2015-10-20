@@ -35,16 +35,24 @@ class PostController extends Controller
         if(!$this->auth->guest()) {
             $post = $this->postRepository->find($postId);
             $comments = $this->commentRepository->findByPostId($postId);
+
+            foreach ($comments as $comment) {
+                $user = $this->userRepository->findByUser($comment->getAuthor());
+                if ($user->isDoctor() == 0) {
+                    $comment->setIsDoctor(false);
+                }
+                else {
+                    $comment->setIsDoctor(true);
+                }
+            }
+
             $request = $this->app->request;
             $message = $request->get('msg');
             $variables = [];
 
-
             if ($message) {
                 $variables['msg'] = $message;
-
             }
-
 
             $this->render('showpost.twig', [
                 'post' => $post,

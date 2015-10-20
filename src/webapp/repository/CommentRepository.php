@@ -61,7 +61,6 @@ class CommentRepository
     public function makeFromRow($row)
     {
         $comment = new Comment;
-        
         return $comment
             ->setCommentId($row['commentId'])
             ->setAuthor($row['author'])
