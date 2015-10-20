@@ -24,7 +24,7 @@
             <tr></tr>
             <th>Role:</th>
             <td>
-                {% if user.isdoctor == 0 %}
+                {% if user.isDoctor == 0%}
                     User
                 {% else %}
                     Doctor
@@ -32,10 +32,10 @@
             </td>
             {% if isAdmin %}
             <td>
-                {% if user.isdoctor == 0 %}
-                    <a href="#">Set as Doctor</a>
+                {% if user.isDoctor == 0 %}
+                    <a href="/admin/doctor/add/{{ user.username|e('html_attr') }}">Set as Doctor</a>
                 {% else %}
-                    <a href="#">Set as user</a>
+                    <a href="/admin/doctor/remove/{{ user.username|e('html_attr') }}">Set as user</a>
                 {% endif %}
             </td>
             {% endif %}

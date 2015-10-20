@@ -191,12 +191,11 @@ class UserController extends Controller
 
         if ($validation->isGoodToGo()){
             $user->setCardnumber($cardNumber);
-            $username = $user->getUsername();
 
             $this->userRepository->saveCardNumber($user);
 
             $this->app->flashNow('info', 'Your cardnumber was successfully saved.');
-            return $this->render('showuser.twig', ['user' => $this->auth->user(), 'username' => $username]);
+            return $this->render('cardnumber.twig', ['user' => $this->auth->user()]);
         }
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
         return $this->render('cardnumber.twig', ['user' => $this->auth->user()]);
