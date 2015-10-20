@@ -63,6 +63,10 @@ $app->post('/user/new', $ns . 'UserController:create');
 $app->get('/user/edit', $ns . 'UserController:showUserEditForm')->name('editprofile');
 $app->post('/user/edit', $ns . 'UserController:receiveUserEditForm');
 
+// Edit cardnumber
+$app->get('/cardnumber', $ns . 'UserController:showCardnumberForm')->name('cardnumber');
+$app->post('/cardnumber', $ns . 'UserController:submitCardnumber');
+
 // Forgot password
 $app->get('/forgot/:username', $ns . 'ForgotPasswordController:confirmForm');
 $app->get('/forgot', $ns . 'ForgotPasswordController:forgotPassword');
@@ -92,6 +96,7 @@ $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
 $app->get('/admin/delete/post/:postid', $ns . 'AdminController:deletepost');
 $app->get('/admin/delete/:username', $ns . 'AdminController:delete');
-
+$app->get('/admin/doctor/add/:username', $ns . 'AdminController:addDoctor');
+$app->get('/admin/doctor/remove/:username', $ns . 'AdminController:removeDoctor');
 
 return $app;

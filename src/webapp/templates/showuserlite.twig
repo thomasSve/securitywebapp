@@ -22,7 +22,24 @@
             <th>Age:</th>
             <td>{{ user.age|e('html_attr') }}</td>
             <tr></tr>
-
+            <th>Role:</th>
+            <td>
+                {% if user.isDoctor == 0%}
+                    User
+                {% else %}
+                    Doctor
+                {% endif %}
+            </td>
+            {% if isAdmin %}
+            <td>
+                {% if user.isDoctor == 0 %}
+                    <a href="/admin/doctor/add/{{ user.username|e('html_attr') }}">Set as Doctor</a>
+                {% else %}
+                    <a href="/admin/doctor/remove/{{ user.username|e('html_attr') }}">Set as user</a>
+                {% endif %}
+            </td>
+            {% endif %}
+            <tr></tr>
     </table>
 {% else %}
     Could not find a user with username "{{ username|e('html_attr') }}".

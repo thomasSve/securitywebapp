@@ -7,6 +7,7 @@ use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\TransferValidation;
 
 class UserController extends Controller
 {
@@ -88,7 +89,6 @@ class UserController extends Controller
 
         } else {
             $user = $this->userRepository->findByUser($username);
-
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
@@ -152,5 +152,53 @@ class UserController extends Controller
             $this->app->flash('info', 'You must be logged in to edit your profile.');
             $this->app->redirect('/login');
         }
+    }
+    /*public function showTransferForm(){
+        $this->makeSureUserIsAuthenticated();
+
+    }
+    public function submitTransfer(){
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request = $this->app->request;
+        $value  = $request->post('value');
+
+        $validation = new TransferValidation();
+        $validation->validateTransfer($user);
+
+        if (){
+            $user->set
+        }
+
+    }*/
+    public function showCardnumberForm(){
+        $this->makeSureUserIsAuthenticated();
+
+        $this->render('cardnumber.twig', [
+            'user' => $this->auth->user()
+        ]);
+    }
+    public function submitCardnumber(){
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request = $this->app->request;
+        $cardNumber = $request->post('cardnumber');
+
+        $validation = new TransferValidation();
+        $validation->validateNewCardnumber($cardNumber);
+
+        if ($validation->isGoodToGo()){
+            $user->setCardnumber($cardNumber);
+            $username = $user->getUsername();
+
+            $this->userRepository->saveCardNumber($user);
+
+            $this->app->flashNow('info', 'Your cardnumber was successfully saved.');
+            return $this->render('showuser.twig', ['user' => $this->auth->user(), 'username' => $username]);
+        }
+        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        return $this->render('cardnumber.twig', ['user' => $this->auth->user()]);
     }
 }

@@ -31,6 +31,7 @@ class UserRepository
         $user->setPostcode((($row['postcode'])));
         $user->setBio($row['bio']);
         $user->setIsAdmin($row['isadmin']);
+        $user->setIsDoctor($row['isdoctor']);
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -38,6 +39,14 @@ class UserRepository
 
         if (!empty($row['age'])) {
             $user->setAge(new Age($row['age']));
+        }
+
+        if (!empty($row['balance'])) {
+            $user->setBalance(($row['balance']));
+        }
+
+        if (!empty($row['cardnumber'])) {
+            $user->setCardNumber(($row['cardnumber']));
         }
 
         return $user;
@@ -65,7 +74,7 @@ class UserRepository
 
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($row === false) {
             return false;
         }
@@ -163,5 +172,29 @@ class UserRepository
 
         return $stmt->execute();
     }
+    public function saveCardNumber(User $user){
+        $query = "UPDATE users SET cardnumber=:cardNumber WHERE id=:id";
+        $stmt = $this->pdo->prepare($query);
 
+        $cardnumber = $user->getCardNumber();
+        $id = $user->getUserId();
+
+        $stmt->bindParam(':cardNumber', $cardnumber, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    public function addDoctor($username) {
+        $query = "UPDATE users SET isdoctor=1 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function removeDoctor($username) {
+        $query = "UPDATE users SET isdoctor=0 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }
