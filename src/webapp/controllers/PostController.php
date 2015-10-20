@@ -23,6 +23,14 @@ class PostController extends Controller
 
             $posts->sortByDate();
             $user = $this->auth->user();
+            if($user->getIsDoctor()==1){
+                for($i = 0; $i < count($posts); $i++){
+                    $user = $this->userRepository->findByUser($posts[$i]->getAuthor());
+                    if($user->getCardNumber()==null){ // Or do not want answer from doctor, or is already answered by a doctor.
+                        unset($posts[$i]);
+                    }
+                }
+            }
             $this->render('posts.twig', [
                 'user' => $user,
                 'posts' => $posts
@@ -42,7 +50,6 @@ class PostController extends Controller
             $request = $this->app->request;
             $message = $request->get('msg');
             $variables = [];
-            $user = $this->userRepository->findUser($post->getAuthor());
 
             if ($message) {
                 $variables['msg'] = $message;
