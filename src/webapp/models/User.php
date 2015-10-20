@@ -15,11 +15,10 @@ class User
     protected $email = null;
     protected $bio = 'Bio is empty.';
     protected $age;
-    protected $bankcard;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
     protected $balance = "0";
-    protected $cardNumber = null;
+    protected $cardNumber;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $salt)
     {
@@ -157,6 +156,10 @@ class User
     public function isDoctor()
     {
         return $this->isDoctor;
+    }
+    public function setBalance($balance){
+        $this->balance = $balance;
+        return $this;
     }
     public function getBalance(){
         return $this->balance;

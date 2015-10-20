@@ -40,6 +40,14 @@ class UserRepository
             $user->setAge(new Age($row['age']));
         }
 
+        if (!empty($row['balance'])) {
+            $user->setBalance(($row['balance']));
+        }
+
+        if (!empty($row['cardnumber'])) {
+            $user->setCardNumber(($row['cardnumber']));
+        }
+
         return $user;
     }
 
@@ -168,8 +176,10 @@ class UserRepository
         $stmt = $this->pdo->prepare($query);
 
         $cardnumber = $user->getCardNumber();
+        $id = $user->getUserId();
 
         $stmt->bindParam(':cardNumber', $cardnumber, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

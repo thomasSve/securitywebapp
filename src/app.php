@@ -56,15 +56,16 @@ $app->get('/login', $ns . 'LoginController:index');
 $app->post('/login', $ns . 'LoginController:login');
 
 // New user
-$app->get('/new_user', $ns . 'UserController:index')->name('newuser');
-$app->post('/new_user', $ns . 'UserController:create');
+$app->get('/user/new', $ns . 'UserController:index')->name('newuser');
+$app->post('/user/new', $ns . 'UserController:create');
 
 // Edit logged in user
-$app->get('/edit_user', $ns . 'UserController:showUserEditForm')->name('editprofile');
-$app->post('/edit_user', $ns . 'UserController:receiveUserEditForm');
-// Transfer money
-$app->get('/transfer_money', $ns . 'UserController:showTransferForm')->name('transferMoney');
-$app->post('/transfer_money', $ns . 'UserController:submitTransfer');
+$app->get('/user/edit', $ns . 'UserController:showUserEditForm')->name('editprofile');
+$app->post('/user/edit', $ns . 'UserController:receiveUserEditForm');
+
+// Edit cardnumber
+$app->get('/cardnumber', $ns . 'UserController:showCardnumberForm')->name('cardnumber');
+$app->post('/cardnumber', $ns . 'UserController:submitCardnumber');
 
 // Forgot password
 $app->get('/forgot/:username', $ns . 'ForgotPasswordController:confirmForm');

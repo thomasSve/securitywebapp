@@ -39,12 +39,10 @@
             <tr></tr>
             <th>Balance:</th>
             <td>{{ user.balance|e('html_attr') }}</td>
-            <td>
-                <a href="/transfer_money">Transfer money</a>
-            </td>
             <tr></tr>
             <th>Card number (4 last digits):</th>
             <td>{{ user.cardNumber|e('html_attr') }}</td>
+            <td><a href="/cardnumber">Change cardnumber</a></td>
             <tr></tr>
     </table>
 {% else %}

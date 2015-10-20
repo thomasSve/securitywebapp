@@ -100,12 +100,14 @@ class PostController extends Controller
             $this->app->redirect("/login");
         } else {
             $request = $this->app->request;
+            $doctor = $request->post('doctor');
             $title = $request->post('title');
             $content = $request->post('content');
             $author = $request->post('author');
             $date = date("dmY");
+            $user = $this->auth->useR();
 
-            $validation = new PostValidation($author, $title, $content);
+            $validation = new PostValidation($author, $title, $content, $doctor, $user);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
                 $post->setAuthor($author);
@@ -115,11 +117,9 @@ class PostController extends Controller
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }
-        }
-
             $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-            $this->app->render('createpost.twig');
-            // RENDER HERE
+            $this->app->render('createpost.twig', ['user' => $this->auth->user()]);
+        }
 
     }
 }
