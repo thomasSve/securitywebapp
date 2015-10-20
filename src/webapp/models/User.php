@@ -148,32 +148,39 @@ class User
         $this->isAdmin = $isAdmin;
         return $this;
     }
+
     public function setIsDoctor($isDoctor)
     {
         $this->isDoctor = $isDoctor;
         return $this;
     }
-    public function isDoctor()
+
+    public function getIsDoctor()
     {
         return $this->isDoctor;
     }
+
     public function setBalance($balance){
         $this->balance = $balance;
         return $this;
     }
+
     public function getBalance(){
         return $this->balance;
     }
+
     public function changeBalance($value)
     {
         $this->balance += $value;
         return $this;
     }
+
     public function setCardNumber($cardNumber)
     {
         $this->cardNumber = $cardNumber;
         return $this;
     }
+
     public function getCardNumber()
     {
         return $this->cardNumber;
