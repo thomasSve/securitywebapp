@@ -18,8 +18,8 @@ class User
     protected $bankcard;
     protected $isAdmin = 0;
     protected $isDoctor = 0;
-    protected $saldo = "0";
-    protected $kortnummer = "0";
+    protected $balance = "0";
+    protected $cardNumber = null;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $salt)
     {
@@ -158,21 +158,21 @@ class User
     {
         return $this->isDoctor;
     }
-    public function getSaldo(){
-        return $this->saldo;
+    public function getBalance(){
+        return $this->balance;
     }
-    public function changeSaldo($value)
+    public function changeBalance($value)
     {
-        $this->saldo += $value;
+        $this->balance += $value;
         return $this;
     }
-    public function setKortnummer($kortnummer)
+    public function setCardNumber($cardNumber)
     {
-        $this->kortnummer = $kortnummer;
+        $this->cardNumber = $cardNumber;
         return $this;
     }
-    public function getKortnummer()
+    public function getCardNumber()
     {
-        return $this->kortnummer;
+        return $this->cardNumber;
     }
 }

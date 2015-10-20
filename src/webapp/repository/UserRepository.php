@@ -163,5 +163,13 @@ class UserRepository
 
         return $stmt->execute();
     }
+    public function saveCardNumber(User $user){
+        $query = "UPDATE users SET cardnumber=:cardNumber WHERE id=:id";
+        $stmt = $this->pdo->prepare($query);
 
+        $cardnumber = $user->getCardNumber();
+
+        $stmt->bindParam(':cardNumber', $cardnumber, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }

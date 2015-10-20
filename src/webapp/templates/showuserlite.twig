@@ -23,13 +23,19 @@
             <td>{{ user.age|e('html_attr') }}</td>
             <tr></tr>
             <th>Role:</th>
-            <td>{{ user.role|raw }}</td>
+            <td>
+                {% if user.isdoctor == 0 %}
+                    User
+                {% else %}
+                    Doctor
+                {% endif %}
+            </td>
             {% if isAdmin %}
             <td>
                 {% if user.isdoctor == 0 %}
-                    <a href="{{ urlFor('changeRole') }}">Set as Doctor</a>
+                    <a href="#">Set as Doctor</a>
                 {% else %}
-                    <a href="{{ urlFor('changeRole') }}">Set as user</a>
+                    <a href="#">Set as user</a>
                 {% endif %}
             </td>
             {% endif %}

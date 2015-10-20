@@ -126,8 +126,9 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $cardNumber = $request->post('cardnumber');
 
-        $validation = new EditUserFormValidation($email, $bio, $age);
+        $validation = new EditUserFormValidation($email, $bio, $age, $cardNumber);
 
         if ($validation->isGoodToGo()) {
             $user->setEmail(new Email($email));
@@ -136,6 +137,7 @@ class UserController extends Controller
             $user->setFullname($fullname);
             $user->setAddress($address);
             $user->setPostcode($postcode);
+            $user->setCardNumber($cardNumber);
             $this->userRepository->save($user);
 
             $this->app->flashNow('info', 'Your profile was successfully saved.');
@@ -152,5 +154,16 @@ class UserController extends Controller
             $this->app->flash('info', 'You must be logged in to edit your profile.');
             $this->app->redirect('/login');
         }
+    }
+
+    public function showTransferForm(){
+        $this->makeSureUserIsAuthenticated();
+
+        $this->render('transferMoney.twig', [
+            'user' => $this->auth->user()
+        ]);
+    }
+    public function submitTransfer(){
+
     }
 }
