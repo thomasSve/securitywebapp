@@ -16,6 +16,7 @@ class Hash
 
     public function check($plaintext, $salt, $hash)
     {
+        usleep(rand(0, 200));    //Microseconds
         return $this->make($plaintext, $salt) === $hash;
     }
 
