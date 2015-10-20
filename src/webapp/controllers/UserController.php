@@ -65,7 +65,7 @@ class UserController extends Controller
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
     return $randomString;
-}
+    }
 
     public function all()
     {

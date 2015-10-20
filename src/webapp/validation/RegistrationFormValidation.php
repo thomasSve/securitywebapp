@@ -44,6 +44,10 @@ class RegistrationFormValidation
             $this->validationErrors[] = "Password must be 8 characters including 1 uppercase, 1 lowercase and 1 number";
         }
 
+        if(strlen($password) > 20) {
+            $this->validationErrors[] = "Password can't exceed length of 20 characters";
+        }
+
         if(empty($fullname)) {
             $this->validationErrors[] = "Please write in your full name";
         }
@@ -58,6 +62,14 @@ class RegistrationFormValidation
 
         if (strlen($postcode) != "4") {
             $this->validationErrors[] = "Post code must be exactly four digits";
+        }
+
+        if (strlen($username) < 3) {
+            $this->validationErrors[] = "Username must be atleast 3 characters";
+        }
+
+        if (strlen($username) > 50) {
+            $this->validationErrors[] = "Username can't exceed length of 50 characters";
         }
 
         if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {
