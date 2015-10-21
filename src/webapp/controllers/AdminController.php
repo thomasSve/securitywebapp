@@ -81,7 +81,7 @@ class AdminController extends Controller
         if($this->auth->isAdmin()) {
             if ($this->userRepository->addDoctor($username)) {
                 $this->app->flash('info', "Sucessfully added doctor '$username'");
-                $this->app->redirect("/user/$username");
+                $this->app->redirect("/admin");
                 return;
             }
             $this->app->flash('info', "Did not set user as doctor, User does not exits");
@@ -97,7 +97,7 @@ class AdminController extends Controller
             if($this->auth->isAdmin()) {
             if ($this->userRepository->removeDoctor($username)) {
                 $this->app->flash('info', "Sucessfully removed doctor '$username'");
-                $this->app->redirect("/user/$username");
+                $this->app->redirect("/admin");
                 return;
             }
             $this->app->flash('info', "Did not remove user as doctor, User does not exits");
