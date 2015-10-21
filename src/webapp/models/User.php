@@ -160,6 +160,11 @@ class User
         return $this->isDoctor;
     }
 
+    public function isDoctor()
+    {
+        return $this->isDoctor;
+    }
+
     public function setBalance($balance){
         $this->balance = $balance;
         return $this;
