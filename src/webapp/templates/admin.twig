@@ -9,11 +9,31 @@
     <tr>
         <th>Id</th>
         <th>Username</th>
+        <th>Admin?</th>
+        <th>Doctor?</th>
     </tr>
     {% for user in users %}
         <tr>
             <td>{{ user.userid|e('html_attr') }}</td>
             <td><a href="/user/{{ user.username|e('html_attr') }}">{{ user.username|e('html_attr') }}</a></td>
+
+            <td>
+                {% if user.isAdmin == 0 %}
+                    No
+                {% else %}
+                    Yes
+                {% endif %}
+            </td>
+
+
+            {% if user.isDoctor == 0 %}
+                <td>No</td>
+                <td><a href="/admin/doctor/add/{{ user.username|e('html_attr') }}">Set as Doctor</a></td>
+            {% else %}
+                <td>Yes</td>
+                <td><a href="/admin/doctor/remove/{{ user.username|e('html_attr') }}">Set as user</a></td>
+            {% endif %}
+
             <td><a href="/admin/delete/{{ user.username|e('html_attr') }}">Delete this user</a></td>
         </tr>
     {% endfor %}
