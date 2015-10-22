@@ -21,7 +21,10 @@ class LoginController extends Controller
             return;
         }
 
-        $this->render('login.twig', []);
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
+        $this->render('login.twig', ['csrf' => $csrf]);
     }
 
     public function login()
@@ -29,6 +32,13 @@ class LoginController extends Controller
         $request = $this->app->request;
         $user    = $request->post('user');
         $pass    = $request->post('pass');
+        $csrf    = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flash('info', "Bot?");
+            $this->app->redirect('/');
+            return;
+        }
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
@@ -49,7 +59,7 @@ class LoginController extends Controller
             $this->app->redirect('/');
             return;
         }
-        
+
         $this->app->flashNow('error', 'Incorrect user/pass combination.');
         $this->render('login.twig', []);
     }
