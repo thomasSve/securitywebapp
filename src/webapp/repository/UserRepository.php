@@ -206,7 +206,7 @@ class UserRepository
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
     public function getBalance($username) {
         $query  = "SELECT balance FROM users WHERE user=:username";
 
