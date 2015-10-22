@@ -35,8 +35,8 @@ class LoginController extends Controller
         $csrf    = $request->post('csrf');
 
         if ($_SESSION['csrf'] != $csrf) {
-            $this->app->flash('info', "Bot?");
-            $this->app->redirect('/');
+            $this->app->flashNow('error', 'Bot?');
+            $this->render('login.twig', ['csrf' => $csrf]);
             return;
         }
 
