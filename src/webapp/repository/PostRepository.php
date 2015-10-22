@@ -19,7 +19,7 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $author, $title, $content, $date, $doctor)
     {
         $post = new Post;
         
@@ -28,7 +28,8 @@ class PostRepository
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setWantAnswerByDoctor($doctor);
     }
 
     public function find($postId)
@@ -81,7 +82,8 @@ class PostRepository
             $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+            $row['doctor']
         );
 
        //  $this->db = $db;
@@ -101,10 +103,11 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+        $doctor = $post->getWantAnswerByDoctor();
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES (:title, :author, :content, :date)";
+            $query = "INSERT INTO posts (title, author, content, date, doctor) "
+                . "VALUES (:title, :author, :content, :date, :doctor)";
         }
 
         $stmt = $this->db->prepare($query);
@@ -113,6 +116,7 @@ class PostRepository
         $stmt->bindParam(':author', $author, PDO::PARAM_STR);
         $stmt->bindParam(':content', $content, PDO::PARAM_STR);
         $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+        $stmt->bindParam(':doctor', $doctor, PDO::PARAM_INT);
 
         $stmt->execute();
 

@@ -19,6 +19,7 @@ class User
     protected $isDoctor = 0;
     protected $balance = 0;
     protected $cardNumber;
+    protected $cardNumberToDisplay;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $salt)
     {
@@ -189,5 +190,20 @@ class User
     public function getCardNumber()
     {
         return $this->cardNumber;
+    }
+    public function setCardNumberToDisplay($cardNumber){
+        $cardToDisplay = "";
+        for($i = 0; $i < strlen($cardNumber); $i++){
+            if((strlen($cardNumber) - $i) > 4){
+                $cardToDisplay .= "*";
+            }else{
+                $cardToDisplay .= "$cardNumber[$i]";
+            }
+        }
+        $this->cardNumberToDisplay = $cardToDisplay;
+        return $this;
+    }
+    public function getCardNumberToDisplay(){
+        return $this->cardNumberToDisplay;
     }
 }

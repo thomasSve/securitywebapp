@@ -26,7 +26,7 @@ class PostController extends Controller
             if($user->getIsDoctor()==1) {
                 for ($i = 0; $i < count($posts); $i++) {
                     $user = $this->userRepository->findByUser($posts[$i]->getAuthor());
-                    if ($user->getCardNumber() == null) { // Or do not want answer from doctor, or is already answered by a doctor.
+                    if($user->getCardNumber()==null || $posts[$i]->getWantAnswerByDoctor() == 0){
                         unset($posts[$i]);
                     }
                 }
@@ -41,7 +41,6 @@ class PostController extends Controller
                     }
                 }
             }
-
             $this->render('posts.twig', [
                 'user' => $user,
                 'posts' => $posts
@@ -147,13 +146,13 @@ class PostController extends Controller
                 $post->setTitle($title);
                 $post->setContent($content);
                 $post->setDate($date);
+                $post->setWantAnswerByDoctor($doctor);
                 $savedPost = $this->postRepository->save($post);
                 $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
             }
-            $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-            $this->app->render('createpost.twig', ['user' => $this->auth->user()]);
+            $this->app->flash('error', join('<br>', $validation->getValidationErrors()));
+            $this->app->redirect('/posts/new');
         }
-
     }
 }
 

@@ -16,6 +16,7 @@ class Post
     protected $content;
     protected $date;
     protected $ansByDoc;
+    protected $wantAnswerByDoctor;
 
     public function getAnsByDoc() {
         return $this->ansByDoc;
@@ -71,6 +72,14 @@ class Post
         return $this->title;
     }
 
+    public function setWantAnswerByDoctor($oneorzero) {
+        $this->wantAnswerByDoctor = $oneorzero;
+        return $this;
+    }
+
+    public function getWantAnswerByDoctor() {
+        return $this->wantAnswerByDoctor;
+    }
 
 
 

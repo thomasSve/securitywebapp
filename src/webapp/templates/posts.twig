@@ -7,13 +7,11 @@
         You are currently registered as a doctor. <br />
     {% endif %}
     {% for post in posts %}
-        {% if post.author %}
+        {% if post.ansByDoc %}
+            <div class="post_doc_ans">
+        {% else %}
+            <div class="post">
         {% endif %}
-        <div class="post">
-            {{ user.cardnumber }}
-            {% if post.ansByDoc %}
-                DOKTOR HAS SVART!!!
-            {% endif %}
             <a href="/posts/{{ post.postId|e('html_attr') }}">{{ post.title|e('html_attr')}}</a> by  <a href="/user/{{ post.author|e('html_attr') }}"> {{ post.author|e('html_attr') }}</a>. Posted on {{ post.date|e('html_attr') }}
         </div>
     {% else %}

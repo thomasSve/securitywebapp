@@ -47,6 +47,7 @@ class UserRepository
 
         if (!empty($row['cardnumber'])) {
             $user->setCardNumber(($row['cardnumber']));
+            $user->setCardNumberToDisplay(($row['cardnumber']));
         }
 
         return $user;
