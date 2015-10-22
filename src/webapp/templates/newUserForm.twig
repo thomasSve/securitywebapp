@@ -8,7 +8,7 @@
 <b>{{ flash.error|e('html_attr') }}</b> <br />
 
 <form action="" method="POST">
-
+    <input type="hidden" name="csrf" value="{{ csrf }}">
     <label>Username: </label>
     <input type="text" name="user" value="{{ username|e('html_attr') }}"> <br />
     <label>Password: </label>
