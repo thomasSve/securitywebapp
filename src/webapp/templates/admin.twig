@@ -10,7 +10,9 @@
         <th>Id</th>
         <th>Username</th>
         <th>Admin?</th>
+        <th>Card number?</th>
         <th>Doctor?</th>
+
     </tr>
     {% for user in users %}
         <tr>
@@ -19,6 +21,15 @@
 
             <td>
                 {% if user.isAdmin == 0 %}
+                    No
+                {% else %}
+                    Yes
+                {% endif %}
+            </td>
+
+            <td>
+
+                {% if user.getCardNumber == 0 %}
                     No
                 {% else %}
                     Yes
