@@ -7,7 +7,10 @@
     <form action="" method="POST">
         <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
         <table>
-            <th>Card number:</th>
+            <th>Current cardnumber</th>
+            <td>{{ user.cardNumberToDisplay|e('html_attr') }}</td>
+            <tr></tr>
+            <th>Change card:</th>
             <td><input type = "text" name="cardnumber"></td>
             <td colspan="2">
                 <input type="submit" name="save" value="Save" style="float: right">
