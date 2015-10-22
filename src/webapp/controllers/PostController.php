@@ -144,7 +144,9 @@ class PostController extends Controller
 
         if ($this->auth->check()) {
             $username = $_SESSION['user'];
-            $this->render('createpost.twig', ['username' => $username]);
+            $csrf = rand(0,10000);
+            $_SESSION['csrf'] = $csrf;
+            $this->render('createpost.twig', ['username' => $username, 'csrf' => $csrf]);
         } else {
             $this->app->flash('error', "You need to be logged in to create a post");
             $this->app->redirect("/");
@@ -154,6 +156,12 @@ class PostController extends Controller
 
     public function create()
     {
+        /* csrf */
+        if ($_SESSION['csrf'] != $_POST['csrf']) {
+            $this->app->flash("info", "Bot?");
+            $this->app->redirect("/posts/new");
+        }
+
         if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged on to create a post");
             $this->app->redirect("/login");

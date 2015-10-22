@@ -5,6 +5,7 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
+        <input name="csrf" type="hidden" value="{{ csrf }}">
         <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
 
         <label>Title:</label>
