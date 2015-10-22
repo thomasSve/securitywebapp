@@ -27,6 +27,7 @@ class Controller
             $variables['isLoggedIn'] = true;
             $variables['isAdmin'] = $this->auth->isAdmin();
             $variables['loggedInUsername'] = $_SESSION['user'];
+            $variables['balance'] = $this->userRepository->getBalance($_SESSION['user']);
         }
 
         print $this->app->render($template, $variables);
