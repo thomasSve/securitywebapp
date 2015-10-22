@@ -62,19 +62,10 @@ class PostController extends Controller
                 }
             }
 
-            $request = $this->app->request;
-            $message = $request->get('msg');
-            $variables = [];
-
-            if ($message) {
-                $variables['msg'] = $message;
-            }
-
             $this->render('showpost.twig', [
                 'post' => $post,
                 'comments' => $comments,
                 'csrf' => $csrf,
-                'flash' => $variables
             ]);
 
         }
@@ -189,7 +180,8 @@ class PostController extends Controller
                 $post->setDate($date);
                 $post->setWantAnswerByDoctor($doctor);
                 $savedPost = $this->postRepository->save($post);
-                $this->app->redirect('/posts/' . $savedPost . '?msg="Post succesfully posted');
+                $this->app->flash('success', "Post succesfully posted");
+                $this->app->redirect('/posts/' . $savedPost);
             }
             $this->app->flash('error', join('<br>', $validation->getValidationErrors()));
             $this->app->redirect('/posts/new');
