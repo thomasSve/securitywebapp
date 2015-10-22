@@ -5,6 +5,7 @@
     <h2>Change card</h2>
 
     <form action="" method="POST">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
         <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
         <table>
             <th>Current cardnumber</th>
