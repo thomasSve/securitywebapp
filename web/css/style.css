@@ -75,3 +75,7 @@ label {
     border: 5px solid limegreen;
     margin: 10px;
 }
+
+.post_doc_ans {
+    border: 3px solid limegreen;
+}
