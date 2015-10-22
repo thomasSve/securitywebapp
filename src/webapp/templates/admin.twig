@@ -39,13 +39,30 @@
 
             {% if user.isDoctor == 0 %}
                 <td>No</td>
-                <td><a href="/admin/doctor/add/{{ user.username|e('html_attr') }}">Set as Doctor</a></td>
+				<td>
+				<form action="admin/doctor/add" method="post">
+				<input type="hidden" name="csrf" value="{{ csrf }}">
+				<input type="hidden" name="username" value="{{ user.username|e('html_attr') }}">
+				<input type="submit" value="Set as Doctor" name="Set as Doctor"></button>
+				</form>
+				</td>
             {% else %}
                 <td>Yes</td>
-                <td><a href="/admin/doctor/remove/{{ user.username|e('html_attr') }}">Set as user</a></td>
+				<td>
+				<form action="admin/doctor/remove" method="post">
+				<input type="hidden" name="csrf" value="{{ csrf }}">
+				<input type="hidden" name="username" value="{{ user.username|e('html_attr') }}">
+				<input type="submit" value="Set as user" name="Set as user"></button>
+				</form>
+				</td>
             {% endif %}
-
-            <td><a href="/admin/delete/{{ user.username|e('html_attr') }}">Delete this user</a></td>
+			<td>
+			<form action="admin/delete" method="post">
+			<input type="hidden" name="csrf" value="{{ csrf }}">
+			<input type="hidden" name="username" value="{{ user.username|e('html_attr') }}">
+			<input type="submit" value="Delete this user" name="Delete this user"></button>
+			</form>
+			</td>
         </tr>
     {% endfor %}
     </table>
@@ -62,7 +79,13 @@
         {% for post in posts %}
         <tr>
             <td><a href="/posts/{{ post.postid|e('html_attr') }}">{{ post.title|e('html_attr') }}</a></td>
-            <td><a href="/admin/delete/post/{{ post.postid|e('html_attr') }}">Delete this post</a></td>
+			<td>
+			<form action="admin/delete/post" method="post">
+			<input type="hidden" name="csrf" value="{{ csrf }}">
+			<input type="hidden" name="postId" value="{{ post.postid|e('html_attr') }}">
+			<input type="submit" value="Delete this post" name="Delete this post"></button>
+			</form>
+			</td>
         </tr>
         {% endfor %}
     </table>
