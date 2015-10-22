@@ -24,7 +24,6 @@
             <br>
         {% endfor %}
         <h2>Post your comment here</h2><br />
-        <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
         <p>Comment: </p>
         <form method="post" action="">
             <input type="hidden" name="csrf" value="{{ csrf }}">

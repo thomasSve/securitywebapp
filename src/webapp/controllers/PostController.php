@@ -24,14 +24,15 @@ class PostController extends Controller
 
             $posts->sortByDate();
             $user = $this->auth->user();
-
             if($user->getIsDoctor()==1) {
+                $temppost = array();
                 for ($i = 0; $i < count($posts); $i++) {
                     $author = $this->userRepository->findByUser($posts[$i]->getAuthor());
-                    if($author->getCardNumber()==null || $posts[$i]->getWantAnswerByDoctor() == 0){
-                        unset($posts[$i]);
+                    if(!$author->getCardNumber()==null && $posts[$i]->getWantAnswerByDoctor() == 1){
+                        array_push($temppost, $posts[$i]);
                     }
                 }
+                $posts = $temppost;
             }
             $this->render('posts.twig', [
                 'user' => $user,
@@ -67,6 +68,7 @@ class PostController extends Controller
 
             if ($message) {
                 $variables['msg'] = $message;
+                print($message);
             }
 
             $this->render('showpost.twig', [
@@ -127,7 +129,7 @@ class PostController extends Controller
                         $this->app->redirect('/posts/' . $postId);
                     }
                 }else {
-                    $this->app->flash('error', "Already answered by a doctor, or you answered on your own post, so no transaction was completed");
+                    $this->app->flash('msg', "Already answered by a doctor, or you answered on your own post, so no transaction was completed");
                     $this->commentRepository->save($comment);
                     $this->app->redirect('/posts/' . $postId);
                     print("Doctor has answered, or answered on own post");
