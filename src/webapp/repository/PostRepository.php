@@ -63,9 +63,15 @@ class PostRepository
             return false;
         }
 
-        return new PostCollection(
-            array_map([$this, 'makeFromRow'], $fetch)
-        );
+        $collection = new PostCollection(
+            array_map([$this, 'makeFromRow'], $fetch));
+
+        foreach ($collection as $post) {
+            $post->setAnsByDoc(false);
+        }
+
+        return $collection;
+
     }
 
     public function makeFromRow($row)

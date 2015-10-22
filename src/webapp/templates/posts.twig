@@ -11,6 +11,9 @@
         {% endif %}
         <div class="post">
             {{ user.cardnumber }}
+            {% if post.ansByDoc %}
+                DOKTOR HAS SVART!!!
+            {% endif %}
             <a href="/posts/{{ post.postId|e('html_attr') }}">{{ post.title|e('html_attr')}}</a> by  <a href="/user/{{ post.author|e('html_attr') }}"> {{ post.author|e('html_attr') }}</a>. Posted on {{ post.date|e('html_attr') }}
         </div>
     {% else %}

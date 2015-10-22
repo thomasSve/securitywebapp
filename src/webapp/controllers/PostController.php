@@ -23,14 +23,25 @@ class PostController extends Controller
 
             $posts->sortByDate();
             $user = $this->auth->user();
-            if($user->getIsDoctor()==1){
-                for($i = 0; $i < count($posts); $i++){
+            if($user->getIsDoctor()==1) {
+                for ($i = 0; $i < count($posts); $i++) {
                     $user = $this->userRepository->findByUser($posts[$i]->getAuthor());
-                    if($user->getCardNumber()==null){ // Or do not want answer from doctor, or is already answered by a doctor.
+                    if ($user->getCardNumber() == null) { // Or do not want answer from doctor, or is already answered by a doctor.
                         unset($posts[$i]);
                     }
                 }
             }
+            // Check if an doctor has answered the post
+            foreach ($posts as $post) {
+                $comments = $this->commentRepository->findByPostId($post->getPostId());
+                foreach ($comments as $comment) {
+                    $user = $this->userRepository->findByUser($comment->getAuthor());
+                    if ($user->isDoctor() == 1) {
+                        $post->setAnsByDoc(true);
+                    }
+                }
+            }
+
             $this->render('posts.twig', [
                 'user' => $user,
                 'posts' => $posts

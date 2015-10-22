@@ -15,7 +15,16 @@ class Post
     protected $title;
     protected $content;
     protected $date;
+    protected $ansByDoc;
 
+    public function getAnsByDoc() {
+        return $this->ansByDoc;
+    }
+
+    public function setAnsByDoc($answered) {
+        $this->ansByDoc = $answered;
+        return $this;
+    }
 
     public function getPostId() {
         return $this->postId;
