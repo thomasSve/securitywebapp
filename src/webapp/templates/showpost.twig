@@ -24,8 +24,8 @@
             <br>
         {% endfor %}
         <h2>Post your comment here</h2><br />
-        <p>Comment: </p>
         <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
+        <p>Comment: </p>
         <form method="post" action="">
             <textarea cols="40" rows="10" name="text" ></textarea> <br />
             <input type="submit" value="Submit comment" name="submit"></button>

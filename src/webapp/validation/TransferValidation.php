@@ -26,9 +26,9 @@ class TransferValidation{
             $this->validationErrors[] = "Card number must contain of numbers and have a length between 13 and 19";
         }
     }
-    public function validateTransfer($doctor, $postAuthor){
+    public function validateTransfer($postAuthor){
         print("Validating transfer");
-        if(!$this->validateCardNumber($doctor->getCardNumber()) || !$this->validateCardNumber($postAuthor->getCardNumber())){
+        if(!$this->validateCardNumber($postAuthor->getCardNumber())){
             $this->validationErrors[] = "User or doctor do not have a valid cardnumber registered, and a transaction could therefore not take place";
         }
     }

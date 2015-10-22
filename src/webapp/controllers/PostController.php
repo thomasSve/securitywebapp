@@ -24,10 +24,11 @@ class PostController extends Controller
 
             $posts->sortByDate();
             $user = $this->auth->user();
+
             if($user->getIsDoctor()==1) {
                 for ($i = 0; $i < count($posts); $i++) {
-                    $user = $this->userRepository->findByUser($posts[$i]->getAuthor());
-                    if($user->getCardNumber()==null || $posts[$i]->getWantAnswerByDoctor() == 0){
+                    $author = $this->userRepository->findByUser($posts[$i]->getAuthor());
+                    if($author->getCardNumber()==null || $posts[$i]->getWantAnswerByDoctor() == 0){
                         unset($posts[$i]);
                     }
                 }
@@ -98,7 +99,7 @@ class PostController extends Controller
                     print("Post answering by doctor, user is not post author");
                     // Make transaction if post has asked for it, and post-author has creditcard
                     $validation = new TransferValidation();
-                    $validation->validateTransfer($user, $postAuthor);
+                    $validation->validateTransfer($postAuthor);
                     if ($validation->isGoodToGo()) {
                         // Take 10$ from postauth's
                         print("Validation valid");
@@ -145,7 +146,6 @@ class PostController extends Controller
             $username = $_SESSION['user'];
             $this->render('createpost.twig', ['username' => $username]);
         } else {
-
             $this->app->flash('error', "You need to be logged in to create a post");
             $this->app->redirect("/");
         }
@@ -164,7 +164,7 @@ class PostController extends Controller
             $content = $request->post('content');
             $author = $_SESSION['user'];
             $date = date("dmY");
-            $user = $this->auth->useR();
+            $user = $this->auth->user();
 
             $validation = new PostValidation($author, $title, $content, $doctor, $user);
             if ($validation->isGoodToGo()) {

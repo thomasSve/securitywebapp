@@ -3,7 +3,7 @@
 {% block content %}
 
     <h2>Posts </h2>
-    {% if user.isDoctor %}
+    {% if user.isDoctor == 1 %}
         You are currently registered as a doctor. <br />
     {% endif %}
     {% for post in posts %}
