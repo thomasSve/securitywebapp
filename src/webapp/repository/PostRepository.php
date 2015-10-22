@@ -22,7 +22,6 @@ class PostRepository
     public static function create($id, $author, $title, $content, $date, $doctor, $answByDoctor)
     {
         $post = new Post;
-        print($answByDoctor);
         return  $post
             ->setPostId($id)
             ->setAuthor($author)
