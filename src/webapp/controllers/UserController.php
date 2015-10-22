@@ -119,7 +119,11 @@ class UserController extends Controller
     {
         $this->makeSureUserIsAuthenticated();
 
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
         $this->render('edituser.twig', [
+            'csrf' => $csrf,
             'user' => $this->auth->user()
         ]);
     }
@@ -136,6 +140,13 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrf = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', "Bot?");
+            $this->render('edituser.twig', ['csrf' => $csrf, 'user' => $user]);
+            return;
+        }
 
         $validation = new EditUserFormValidation($email, $bio, $age);
 
@@ -185,29 +196,38 @@ class UserController extends Controller
     public function showCardnumberForm(){
         $this->makeSureUserIsAuthenticated();
 
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
         $this->render('cardnumber.twig', [
+            'csrf' => $csrf,
             'user' => $this->auth->user()
         ]);
     }
-    public function submitCardnumber(){
+    public function submitCardnumber()
+    {
         $this->makeSureUserIsAuthenticated();
         $user = $this->auth->user();
 
         $request = $this->app->request;
         $cardNumber = $request->post('cardnumber');
+        $csrf = $request->post('csrf');
 
         $validation = new TransferValidation();
         $validation->validateNewCardnumber($cardNumber);
 
-        if ($validation->isGoodToGo()){
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', "bot?");
+            return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
+        } else if ($validation->isGoodToGo()){
             $user->setCardnumber($cardNumber);
 
             $this->userRepository->saveCardNumber($user);
 
             $this->app->flashNow('info', 'Your cardnumber was successfully saved.');
-            return $this->render('cardnumber.twig', ['user' => $this->auth->user()]);
+            return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
         }
         $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
-        return $this->render('cardnumber.twig', ['user' => $this->auth->user()]);
+        return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
     }
 }
