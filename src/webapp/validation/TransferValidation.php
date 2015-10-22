@@ -27,7 +27,6 @@ class TransferValidation{
         }
     }
     public function validateTransfer($postAuthor){
-        print("Validating transfer");
         if(!$this->validateCardNumber($postAuthor->getCardNumber())){
             $this->validationErrors[] = "User or doctor do not have a valid cardnumber registered, and a transaction could therefore not take place";
         }

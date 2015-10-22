@@ -68,7 +68,6 @@ class PostController extends Controller
 
             if ($message) {
                 $variables['msg'] = $message;
-                print($message);
             }
 
             $this->render('showpost.twig', [
@@ -181,7 +180,6 @@ class PostController extends Controller
             $author = $_SESSION['user'];
             $date = date("dmY");
             $user = $this->auth->user();
-
             $validation = new PostValidation($author, $title, $content, $doctor, $user);
             if ($validation->isGoodToGo()) {
                 $post = new Post();
