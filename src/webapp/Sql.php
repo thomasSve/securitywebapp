@@ -46,8 +46,8 @@ class Sql
 
         $q1 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('admin', '$hash1', 1, 'admin', 'homebase', '9090', '$salt1', 0)";
         $q2 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('bob', '$hash2', 0, 'Robert Green', 'Greenland Grove 9', '2010', '$salt2', 0)";
-        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('bjarni', '$hash3', 0, 'Bjarni Torgmund', 'Hummerdale 12', '4120', '$salt3', 0)";
-        $q4 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, cardnumber,isdoctor) VALUES ('testuser', '$hash4', 1, 'admin', 'homebase', '9090', '$salt4', 12345678912345,0)";
+        $q3 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, cardnumber, isdoctor) VALUES ('bjarni', '$hash3', 0, 'Bjarni Torgmund', 'Hummerdale 12', '4120', '$salt3', 12345678912345, 0)";
+        $q4 = "INSERT INTO users(user, pass, isadmin, fullname, address, postcode, salt, isdoctor) VALUES ('testuser', '$hash4', 1, 'admin', 'homebase', '9090', '$salt4', 0)";
 
         self::$pdo->exec($q1);
         self::$pdo->exec($q2);
