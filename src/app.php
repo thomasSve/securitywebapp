@@ -94,9 +94,9 @@ $app->get('/logout', $ns . 'UserController:logout')->name('logout');
 
 // Admin restricted area
 $app->get('/admin', $ns . 'AdminController:index')->name('admin');
-$app->get('/admin/delete/post/:postid', $ns . 'AdminController:deletepost');
-$app->get('/admin/delete/:username', $ns . 'AdminController:delete');
-$app->get('/admin/doctor/add/:username', $ns . 'AdminController:addDoctor');
-$app->get('/admin/doctor/remove/:username', $ns . 'AdminController:removeDoctor');
+$app->post('/admin/delete/post', $ns . 'AdminController:deletepost');
+$app->post('/admin/delete', $ns . 'AdminController:delete');
+$app->post('/admin/doctor/add', $ns . 'AdminController:addDoctor');
+$app->post('/admin/doctor/remove', $ns . 'AdminController:removeDoctor');
 
 return $app;

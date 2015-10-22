@@ -23,17 +23,29 @@ class AdminController extends Controller
             $this->app->flash('info', "You must be administrator to view the admin page.");
             $this->app->redirect('/');
         }
-
+		
+		$csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+		
         $variables = [
+			'csrf' => $csrf,
             'users' => $this->userRepository->all(),
             'posts' => $this->postRepository->all()
         ];
         $this->render('admin.twig', $variables);
     }
 
-    public function delete($username)
+    public function delete()
     {
+		$request = $this->app->request;
+		$username    = $request->post('username');
+        $csrf    = $request->post('csrf');
 
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', 'Bot?');
+            $this->render('login.twig', ['csrf' => $csrf]);
+            return;
+        }
 
             if($this->auth->isAdmin()) {
                 if ($this->userRepository->deleteByUsername($username)) {
@@ -56,9 +68,19 @@ class AdminController extends Controller
 
     }
 
-    public function deletePost($postId)
+    public function deletePost()
     {
+			$request = $this->app->request;
+			$postId    = $request->post('postId');
+			$csrf    = $request->post('csrf');
 
+			if ($_SESSION['csrf'] != $csrf) {
+				$this->app->flashNow('error', 'Bot?');
+				$this->render('login.twig', ['csrf' => $csrf]);
+				return;
+			}
+			
+			
             if($this->auth->isAdmin()) {
                 if ($this->postRepository->deleteByPostid($postId)) {
                     $this->app->flash('info', "Sucessfully deleted '$postId'");
@@ -76,8 +98,18 @@ class AdminController extends Controller
 
     }
 
-    public function addDoctor($username)
+    public function addDoctor()
     {
+		$request = $this->app->request;
+		$username    = $request->post('username');
+        $csrf    = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', 'Bot?');
+            $this->render('login.twig', ['csrf' => $csrf]);
+            return;
+        }
+		
         if($this->auth->isAdmin()) {
             if ($this->userRepository->addDoctor($username)) {
                 $this->app->flash('info', "Sucessfully added doctor '$username'");
@@ -93,7 +125,18 @@ class AdminController extends Controller
         }
     }
 
-    public function removeDoctor($username) {
+    public function removeDoctor() {
+		
+		$request = $this->app->request;
+		$username    = $request->post('username');
+        $csrf    = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', 'Bot?');
+            $this->render('login.twig', ['csrf' => $csrf]);
+            return;
+        }
+		
             if($this->auth->isAdmin()) {
             if ($this->userRepository->removeDoctor($username)) {
                 $this->app->flash('info', "Sucessfully removed doctor '$username'");
