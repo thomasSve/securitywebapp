@@ -119,7 +119,11 @@ class UserController extends Controller
     {
         $this->makeSureUserIsAuthenticated();
 
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
         $this->render('edituser.twig', [
+            'csrf' => $csrf,
             'user' => $this->auth->user()
         ]);
     }
@@ -136,6 +140,13 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrf = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', "Bot?");
+            $this->render('edituser.twig', ['csrf' => $csrf, 'user' => $user]);
+            return;
+        }
 
         $validation = new EditUserFormValidation($email, $bio, $age);
 
