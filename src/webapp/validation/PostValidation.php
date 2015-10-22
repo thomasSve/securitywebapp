@@ -35,8 +35,7 @@ class PostValidation {
         if ($content == null) {
             $this->validationErrors[] = "Text needed";
         }
-
-        if($doctor == "Yes"){
+        if($doctor == 1){
             $this->validateTransaction($user);
         }else if($doctor == null){
             $this->validationErrors[] = "Unanswered question: Ask doctor?";
