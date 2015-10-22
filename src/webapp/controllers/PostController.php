@@ -48,6 +48,8 @@ class PostController extends Controller
         if(!$this->auth->guest()) {
             $post = $this->postRepository->find($postId);
             $comments = $this->commentRepository->findByPostId($postId);
+            $csrf = rand(0,10000);
+            $_SESSION['csrf'] = $csrf;
 
             foreach ($comments as $comment) {
                 $user = $this->userRepository->findByUser($comment->getAuthor());
@@ -70,6 +72,7 @@ class PostController extends Controller
             $this->render('showpost.twig', [
                 'post' => $post,
                 'comments' => $comments,
+                'csrf' => $csrf,
                 'flash' => $variables
             ]);
 
@@ -83,7 +86,12 @@ class PostController extends Controller
 
     public function addComment($postId)
     {
-        if(!$this->auth->guest()) {
+        /* csrf */
+        if ($_SESSION['csrf'] != $_POST['csrf']) {
+            $this->app->flash("info", "Bot?");
+            $this->app->redirect("/posts/$postId");
+        } else if(!$this->auth->guest()) {
+
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
             $comment->setText($this->app->request->post("text"));
@@ -160,9 +168,7 @@ class PostController extends Controller
         if ($_SESSION['csrf'] != $_POST['csrf']) {
             $this->app->flash("info", "Bot?");
             $this->app->redirect("/posts/new");
-        }
-
-        if ($this->auth->guest()) {
+        } else if ($this->auth->guest()) {
             $this->app->flash("info", "You must be logged on to create a post");
             $this->app->redirect("/login");
         } else {
