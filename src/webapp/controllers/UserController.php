@@ -20,7 +20,10 @@ class UserController extends Controller
     public function index()
     {
         if ($this->auth->guest()) {
-            return $this->render('newUserForm.twig', []);
+            $csrf = rand(0,10000);
+            $_SESSION['csrf'] = $csrf;
+
+            return $this->render('newUserForm.twig', ['csrf' => $csrf]);
         }
 
         $username = $this->auth->user()->getUserName();
@@ -36,7 +39,14 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
-        
+        $csrf = $request->post('csrf');
+
+        /* csrf */
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', $errors);
+            $this->render('newUserForm.twig', ['username' => $username, 'csrf' => $csrf]);
+            return;
+        }
 
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
@@ -55,7 +65,7 @@ class UserController extends Controller
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('newUserForm.twig', ['username' => $username]);
+        $this->render('newUserForm.twig', ['username' => $username, 'csrf' => $csrf]);
     }
 	
 	public static function generateSalt($length = 10) {
