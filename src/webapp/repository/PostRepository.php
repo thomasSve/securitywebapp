@@ -19,17 +19,18 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date, $doctor)
+    public static function create($id, $author, $title, $content, $date, $doctor, $answByDoctor)
     {
         $post = new Post;
-        
-        return $post
+        print($answByDoctor);
+        return  $post
             ->setPostId($id)
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
             ->setDate($date)
-            ->setWantAnswerByDoctor($doctor);
+            ->setWantAnswerByDoctor($doctor)
+            ->setAnsByDoc($answByDoctor);
     }
 
     public function find($postId)
@@ -67,10 +68,6 @@ class PostRepository
         $collection = new PostCollection(
             array_map([$this, 'makeFromRow'], $fetch));
 
-        foreach ($collection as $post) {
-            $post->setAnsByDoc(false);
-        }
-
         return $collection;
 
     }
@@ -83,7 +80,8 @@ class PostRepository
             $row['title'],
             $row['content'],
             $row['date'],
-            $row['doctor']
+            $row['doctor'],
+            $row['answByDoctor']
         );
 
        //  $this->db = $db;
@@ -121,5 +119,13 @@ class PostRepository
         $stmt->execute();
 
         return $this->db->lastInsertId();
+    }
+
+    public function addAnsDoctor($postId) {
+        print($postId);
+        $query = "UPDATE posts SET answByDoctor=1 WHERE postId=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $postId, PDO::PARAM_STR);
+        return $stmt->execute();
     }
 }

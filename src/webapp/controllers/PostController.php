@@ -6,6 +6,7 @@ use tdt4237\webapp\models\Post;
 use tdt4237\webapp\controllers\UserController;
 use tdt4237\webapp\models\Comment;
 use tdt4237\webapp\validation\PostValidation;
+use tdt4237\webapp\validation\TransferValidation;
 
 class PostController extends Controller
 {
@@ -31,24 +32,13 @@ class PostController extends Controller
                     }
                 }
             }
-            // Check if an doctor has answered the post
-            foreach ($posts as $post) {
-                $comments = $this->commentRepository->findByPostId($post->getPostId());
-                foreach ($comments as $comment) {
-                    $user = $this->userRepository->findByUser($comment->getAuthor());
-                    if ($user->isDoctor() == 1) {
-                        $post->setAnsByDoc(true);
-                    }
-                }
-            }
             $this->render('posts.twig', [
                 'user' => $user,
                 'posts' => $posts
             ]);
         } else {
-
                 $this->app->flash('info', 'You must log in to do that');
-             $this->app->redirect('/login');
+                $this->app->redirect('/login');
             }
     }
 
@@ -92,16 +82,53 @@ class PostController extends Controller
 
     public function addComment($postId)
     {
-
         if(!$this->auth->guest()) {
-
             $comment = new Comment();
             $comment->setAuthor($_SESSION['user']);
             $comment->setText($this->app->request->post("text"));
             $comment->setDate(date("dmY"));
             $comment->setPost($postId);
-            $this->commentRepository->save($comment);
-            $this->app->redirect('/posts/' . $postId);
+            // Check if author is doctor, and then check if a doctor has already responded to
+            $user = $this->auth->user();
+            if ($user->isDoctor() == 1) {
+                $post = $this->postRepository->find($postId);
+                $postAuthor = $this->userRepository->findByUser($post->getAuthor());
+                print("This is a doctor");
+                if ($post->getAnsByDoc()==0 && ($user->getUsername() != $postAuthor->getUsername())) {
+                    print("Post answering by doctor, user is not post author");
+                    // Make transaction if post has asked for it, and post-author has creditcard
+                    $validation = new TransferValidation();
+                    $validation->validateTransfer($user, $postAuthor);
+                    if ($validation->isGoodToGo()) {
+                        // Take 10$ from postauth's
+                        print("Validation valid");
+                        $postAuthor->changeBalance(-10);
+                        // Send 7$ to doctor, commentpost
+                        $user->changeBalance(7);
+                        // Send 3$ to webpage, currently unknown bank-information
+                        $post->setAnsByDoc(1);
+                        $this->userRepository->saveTransaction($user->getUsername(), ($user->getBalance()));
+                        $this->userRepository->saveTransaction($postAuthor->getUsername(), ($postAuthor->getBalance()));
+                        $this->postRepository->addAnsDoctor($postId);
+                        $this->commentRepository->save($comment);
+                        $this->app->redirect('/posts/' . $postId);
+                    }else{
+                        print("Validation not valid");
+                        $this->app->flash('msg', join('<br>', $validation->getValidationErrors()));
+                        $this->app->redirect('/posts/' . $postId);
+                    }
+                }else {
+                    $this->app->flash('error', "Already answered by a doctor, or you answered on your own post, so no transaction was completed");
+                    $this->commentRepository->save($comment);
+                    $this->app->redirect('/posts/' . $postId);
+                    print("Doctor has answered, or answered on own post");
+                }
+
+            } else {
+                $this->commentRepository->save($comment);
+                $this->app->redirect('/posts/' . $postId);
+                print("Is not doctor");
+            }
         }
         else {
             $this->app->flash('info', 'you must log in to do that');

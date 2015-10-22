@@ -22,18 +22,21 @@ class TransferValidation{
 
     public function validateNewCardnumber($cardnumber)
     {
-        $this->validateCardNumber($cardnumber);
-    }
-
-    private function validateCardNumber($cardnumber)
-    {
-        if(! is_numeric($cardnumber) or strlen($cardnumber) > 19 or strlen($cardnumber) < 13){
+        if(!$this->validateCardNumber($cardnumber)){
             $this->validationErrors[] = "Card number must contain of numbers and have a length between 13 and 19";
         }
     }
-    public function validateDeposit($amount){
-        if(! is_numeric($amount) or $amount > 0){
-            $this->validationErrors[] = "Amount to deposit must contain of numbers and be larger than 0";
+    public function validateTransfer($doctor, $postAuthor){
+        print("Validating transfer");
+        if(!$this->validateCardNumber($doctor->getCardNumber()) || !$this->validateCardNumber($postAuthor->getCardNumber())){
+            $this->validationErrors[] = "User or doctor do not have a valid cardnumber registered, and a transaction could therefore not take place";
         }
+    }
+    private function validateCardNumber($cardnumber)
+    {
+        if (!is_numeric($cardnumber) or strlen($cardnumber) > 19 or strlen($cardnumber) < 13) {
+            return false;
+        }
+        return true;
     }
 }

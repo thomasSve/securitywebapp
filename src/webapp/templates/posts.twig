@@ -7,7 +7,7 @@
         You are currently registered as a doctor. <br />
     {% endif %}
     {% for post in posts %}
-        {% if post.ansByDoc %}
+        {% if post.ansByDoc == 1 %}
             <div class="post_doc_ans">
         {% else %}
             <div class="post">
@@ -17,5 +17,5 @@
     {% else %}
         There are no posts as of yet
     {% endfor %}
-
+    <br />* If the post is marked with a green box, it means a doctor has responded to it.
 {% endblock %}

@@ -81,8 +81,4 @@ class Post
         return $this->wantAnswerByDoctor;
     }
 
-
-
-
-
 }

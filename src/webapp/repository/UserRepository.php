@@ -198,4 +198,12 @@ class UserRepository
         $stmt->bindParam(':username', $username, PDO::PARAM_STR);
         return $stmt->execute();
     }
+
+    public function saveTransaction($username, $balance){
+        $query = "UPDATE users SET balance=:balance WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':balance', $balance, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }
