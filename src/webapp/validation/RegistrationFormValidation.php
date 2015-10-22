@@ -9,6 +9,7 @@ class RegistrationFormValidation
     const MIN_USER_LENGTH = 3;
     
     private $validationErrors = [];
+    private $userRepository;
     
     public function __construct($username, $password, $fullname, $address, $postcode)
     {
@@ -19,7 +20,11 @@ class RegistrationFormValidation
     {
         return empty($this->validationErrors);
     }
-    
+
+    public function addValidationError($error) {
+        $this->validationErrors[] = $error;
+    }
+
     public function getValidationErrors()
     {
         return $this->validationErrors;
@@ -29,6 +34,18 @@ class RegistrationFormValidation
     {
         if (empty($password)) {
             $this->validationErrors[] = 'Password cannot be empty';
+        }
+
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $number    = preg_match('@[0-9]@', $password);
+
+        if(!$uppercase || !$lowercase || !$number || strlen($password) < 8) {
+            $this->validationErrors[] = "Password must be 8 characters including 1 uppercase, 1 lowercase and 1 number";
+        }
+
+        if(strlen($password) > 20) {
+            $this->validationErrors[] = "Password can't exceed length of 20 characters";
         }
 
         if(empty($fullname)) {
@@ -45,6 +62,14 @@ class RegistrationFormValidation
 
         if (strlen($postcode) != "4") {
             $this->validationErrors[] = "Post code must be exactly four digits";
+        }
+
+        if (strlen($username) < 3) {
+            $this->validationErrors[] = "Username must be atleast 3 characters";
+        }
+
+        if (strlen($username) > 50) {
+            $this->validationErrors[] = "Username can't exceed length of 50 characters";
         }
 
         if (preg_match('/^[A-Za-z0-9_]+$/', $username) === 0) {

@@ -10,12 +10,7 @@ use tdt4237\webapp\models\User;
 
 class UserRepository
 {
-    const INSERT_QUERY   = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, salt) VALUES('%s', '%s', '%s' , '%s' , '%s', '%s', '%s', '%s', '%s', '%s')";
-    const UPDATE_QUERY   = "UPDATE users SET email='%s', age='%s', bio='%s', isadmin='%s', fullname ='%s', address = '%s', postcode = '%s' WHERE id='%s'";
-    const FIND_BY_NAME   = "SELECT * FROM users WHERE user='%s'";
-    const DELETE_BY_NAME = "DELETE FROM users WHERE user='%s'";
-    const SELECT_ALL     = "SELECT * FROM users";
-    const FIND_FULL_NAME   = "SELECT * FROM users WHERE user='%s'";
+    const SELECT_ALL = "SELECT * FROM users";
 
     /**
      * @var PDO
@@ -36,6 +31,7 @@ class UserRepository
         $user->setPostcode((($row['postcode'])));
         $user->setBio($row['bio']);
         $user->setIsAdmin($row['isadmin']);
+        $user->setIsDoctor($row['isdoctor']);
 
         if (!empty($row['email'])) {
             $user->setEmail(new Email($row['email']));
@@ -45,38 +41,56 @@ class UserRepository
             $user->setAge(new Age($row['age']));
         }
 
+        if (!empty($row['balance'])) {
+            $user->setBalance(($row['balance']));
+        }
+
+        if (!empty($row['cardnumber'])) {
+            $user->setCardNumber(($row['cardnumber']));
+            $user->setCardNumberToDisplay(($row['cardnumber']));
+        }
+
         return $user;
     }
 
     public function getNameByUsername($username)
     {
-        $query = sprintf(self::FIND_FULL_NAME, $username);
+        $query = "SELECT * FROM users WHERE user=:username";
 
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
         return $row['fullname'];
-
     }
 
     public function findByUser($username)
     {
-        $query  = sprintf(self::FIND_BY_NAME, $username);
-        $result = $this->pdo->query($query, PDO::FETCH_ASSOC);
-        $row = $result->fetch();
-        
+        $query  = "SELECT * FROM users WHERE user=:username";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
         if ($row === false) {
             return false;
         }
-
 
         return $this->makeUserFromRow($row);
     }
 
     public function deleteByUsername($username)
     {
-        return $this->pdo->exec(
-            sprintf(self::DELETE_BY_NAME, $username)
-        );
+        $query = "DELETE FROM users WHERE user=:username";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
 
@@ -104,20 +118,104 @@ class UserRepository
 
     public function saveNewUser(User $user)
     {
-        $query = sprintf(
-            self::INSERT_QUERY, $user->getUsername(), $user->getHash(), $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getSalt()
-        );
+        $query = "INSERT INTO users(user, pass, email, age, bio, isadmin, fullname, address, postcode, salt) VALUES(:username, :pass, :email, :age , :bio , :isadmin, :fullname, :address, :postcode, :salt)";
 
-        return $this->pdo->exec($query);
+        $stmt = $this->pdo->prepare($query);
+
+        $username = $user->getUsername();
+        $pass = $user->getHash();
+        $email = $user->getEmail();
+        $age = $user->getAge();
+        $bio = $user->getBio();
+        $isadmin = $user->isAdmin();
+        $fullname = $user->getFullname();
+        $address = $user->getAddress();
+        $postcode = $user->getPostcode();
+        $salt = $user->getSalt();
+
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->bindParam(':pass', $pass, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':age', $age, PDO::PARAM_STR);
+        $stmt->bindParam(':bio', $bio, PDO::PARAM_STR);
+        $stmt->bindParam(':isadmin', $isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
+        $stmt->bindParam(':postcode', $postcode, PDO::PARAM_STR);
+        $stmt->bindParam(':salt', $salt, PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     public function saveExistingUser(User $user)
     {
-        $query = sprintf(
-            self::UPDATE_QUERY, $user->getEmail(), $user->getAge(), $user->getBio(), $user->isAdmin(), $user->getFullname(), $user->getAddress(), $user->getPostcode(), $user->getUserId()
-        );
+        $query = "UPDATE users SET email=:email, age=:age, bio=:bio, isadmin=:isadmin, fullname=:fullname, address=:address, postcode=:postcode WHERE id=:id";
 
-        return $this->pdo->exec($query);
+        $stmt = $this->pdo->prepare($query);
+
+        $email = $user->getEmail();
+        $age = $user->getAge();
+        $bio = $user->getBio();
+        $isadmin = $user->isAdmin();
+        $fullname = $user->getFullname();
+        $address = $user->getAddress();
+        $postcode = $user->getPostcode();
+        $id = $user->getUserId();
+
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':age', $age, PDO::PARAM_STR);
+        $stmt->bindParam(':bio', $bio, PDO::PARAM_STR);
+        $stmt->bindParam(':isadmin', $isadmin, PDO::PARAM_INT);
+        $stmt->bindParam(':fullname', $fullname, PDO::PARAM_STR);
+        $stmt->bindParam(':address', $address, PDO::PARAM_STR);
+        $stmt->bindParam(':postcode', $postcode, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+    public function saveCardNumber(User $user){
+        $query = "UPDATE users SET cardnumber=:cardNumber WHERE id=:id";
+        $stmt = $this->pdo->prepare($query);
+
+        $cardnumber = $user->getCardNumber();
+        $id = $user->getUserId();
+
+        $stmt->bindParam(':cardNumber', $cardnumber, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
+    public function addDoctor($username) {
+        $query = "UPDATE users SET isdoctor=1 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function removeDoctor($username) {
+        $query = "UPDATE users SET isdoctor=0 WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function saveTransaction($username, $balance){
+        $query = "UPDATE users SET balance=:balance WHERE user=:username";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':balance', $balance, PDO::PARAM_STR);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function getBalance($username) {
+        $query  = "SELECT balance FROM users WHERE user=:username";
+
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+
+        $stmt->execute();
+        $balance = $stmt->fetch();
+
+        return $balance['balance'];
+    }
 }

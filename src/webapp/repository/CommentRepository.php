@@ -17,7 +17,6 @@ class CommentRepository
 
     public function __construct(PDO $db)
     {
-
         $this->db = $db;
     }
 
@@ -29,19 +28,31 @@ class CommentRepository
         $date = (string) $comment->getDate();
         $postid = $comment->getPost();
 
-
-
-        if ($comment->getCommentId() === null) {
+        if ($id === null) {
             $query = "INSERT INTO comments (author, text, date, belongs_to_post) "
-                . "VALUES ('$author', '$text', '$date', '$postid')";
-            return $this->db->exec($query);
+                . "VALUES (:author, :text, :date, :postid)";
+
+            $stmt = $this->db->prepare($query);
+
+            $stmt->bindParam(':author', $author, PDO::PARAM_STR);
+            $stmt->bindParam(':text', $text, PDO::PARAM_STR);
+            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+            $stmt->bindParam(':postid', $postid, PDO::PARAM_INT);
+
+            return $stmt->execute();
         }
     }
 
     public function findByPostId($postId)
     {
-        $query   = "SELECT * FROM comments WHERE belongs_to_post = $postId";
-        $rows = $this->db->query($query)->fetchAll();
+        $query   = "SELECT * FROM comments WHERE belongs_to_post = :postid";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':postid', $postId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll();
 
         return array_map([$this, 'makeFromRow'], $rows);
     }
@@ -49,7 +60,6 @@ class CommentRepository
     public function makeFromRow($row)
     {
         $comment = new Comment;
-        
         return $comment
             ->setCommentId($row['commentId'])
             ->setAuthor($row['author'])

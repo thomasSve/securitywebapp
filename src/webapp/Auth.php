@@ -33,7 +33,7 @@ class Auth
             return false;
         }
 
-        return $this->hash->check($password, $user->getHash());
+        return $this->hash->check($password, $user->getSalt(), $user->getHash());
     }
 
     /**
@@ -76,17 +76,14 @@ class Auth
     public function isAdmin()
     {
         if ($this->check()) {
-            return $_COOKIE['isadmin'] === 'yes';
+            return $_SESSION['isadmin'] === 'yes';
         }
 
         throw new Exception('Not logged in but called Auth::isAdmin() anyway');
     }
-
     public function logout()
     {
-        if($this->guest()) {
-            session_destroy();
-        }
+        session_destroy();
     }
 
 }

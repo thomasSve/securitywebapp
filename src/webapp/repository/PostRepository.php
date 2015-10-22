@@ -19,28 +19,32 @@ class PostRepository
         $this->db = $db;
     }
     
-    public static function create($id, $author, $title, $content, $date)
+    public static function create($id, $author, $title, $content, $date, $doctor, $answByDoctor)
     {
         $post = new Post;
-        
-        return $post
+        return  $post
             ->setPostId($id)
             ->setAuthor($author)
             ->setTitle($title)
             ->setContent($content)
-            ->setDate($date);
+            ->setDate($date)
+            ->setWantAnswerByDoctor($doctor)
+            ->setAnsByDoc($answByDoctor);
     }
 
     public function find($postId)
     {
-        $sql  = "SELECT * FROM posts WHERE postId = $postId";
-        $result = $this->db->query($sql);
-        $row = $result->fetch();
+        $sql  = "SELECT * FROM posts WHERE postId = :postid";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':postid', $postId, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $row = $stmt->fetch();
 
         if($row === false) {
             return false;
         }
-
 
         return $this->makeFromRow($row);
     }
@@ -60,9 +64,11 @@ class PostRepository
             return false;
         }
 
-        return new PostCollection(
-            array_map([$this, 'makeFromRow'], $fetch)
-        );
+        $collection = new PostCollection(
+            array_map([$this, 'makeFromRow'], $fetch));
+
+        return $collection;
+
     }
 
     public function makeFromRow($row)
@@ -72,7 +78,9 @@ class PostRepository
             $row['author'],
             $row['title'],
             $row['content'],
-            $row['date']
+            $row['date'],
+            $row['doctor'],
+            $row['answByDoctor']
         );
 
        //  $this->db = $db;
@@ -80,8 +88,9 @@ class PostRepository
 
     public function deleteByPostid($postId)
     {
-        return $this->db->exec(
-            sprintf("DELETE FROM posts WHERE postid='%s';", $postId));
+        $stmt = $this->db->prepare("DELETE FROM posts WHERE postid=:postid");
+        $stmt->bindParam(':postid', $postId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 
 
@@ -91,13 +100,31 @@ class PostRepository
         $author = $post->getAuthor();
         $content = $post->getContent();
         $date    = $post->getDate();
+        $doctor = $post->getWantAnswerByDoctor();
 
         if ($post->getPostId() === null) {
-            $query = "INSERT INTO posts (title, author, content, date) "
-                . "VALUES ('$title', '$author', '$content', '$date')";
+            $query = "INSERT INTO posts (title, author, content, date, doctor) "
+                . "VALUES (:title, :author, :content, :date, :doctor)";
         }
 
-        $this->db->exec($query);
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->bindParam(':author', $author, PDO::PARAM_STR);
+        $stmt->bindParam(':content', $content, PDO::PARAM_STR);
+        $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+        $stmt->bindParam(':doctor', $doctor, PDO::PARAM_INT);
+
+        $stmt->execute();
+
         return $this->db->lastInsertId();
+    }
+
+    public function addAnsDoctor($postId) {
+        print($postId);
+        $query = "UPDATE posts SET answByDoctor=1 WHERE postId=:id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $postId, PDO::PARAM_STR);
+        return $stmt->execute();
     }
 }

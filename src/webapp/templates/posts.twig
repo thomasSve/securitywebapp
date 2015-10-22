@@ -2,14 +2,20 @@
 
 {% block content %}
 
-    <h2>Posts</h2>
-
+    <h2>Posts </h2>
+    {% if user.isDoctor == 1 %}
+        You are currently registered as a doctor. <br />
+    {% endif %}
     {% for post in posts %}
-        <div class="post">
-            <a href="/posts/{{ post.postId }}">{{ post.title}}</a> by  <a href="/user/{{ post.author|raw }}"> {{ post.author|raw }}</a>. Posted on {{ post.date }}
+        {% if post.ansByDoc == 1 %}
+            <div class="post_doc_ans">
+        {% else %}
+            <div class="post">
+        {% endif %}
+            <a href="/posts/{{ post.postId|e('html_attr') }}">{{ post.title|e('html_attr')}}</a> by  <a href="/user/{{ post.author|e('html_attr') }}"> {{ post.author|e('html_attr') }}</a>. Posted on {{ post.date|e('html_attr') }}
         </div>
     {% else %}
         There are no posts as of yet
     {% endfor %}
-
+    <br />* If the post is marked with a green box, it means a doctor has responded to it.
 {% endblock %}

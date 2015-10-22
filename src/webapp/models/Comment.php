@@ -15,11 +15,19 @@ class Comment
     protected $text;
     protected $date;
     protected $belongs_to_post;
+    protected $isDoctor;
 
+    public function getIsDoctor() {
+        return $this->isDoctor;
+    }
+
+    public function setIsDoctor($doc) {
+        $this->isDoctor = $doc;
+        return $this;
+    }
 
     public function getCommentId() {
         return $this->commentId;
-
     }
 
     public function setCommentId($postId) {

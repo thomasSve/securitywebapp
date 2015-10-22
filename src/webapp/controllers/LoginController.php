@@ -21,7 +21,10 @@ class LoginController extends Controller
             return;
         }
 
-        $this->render('login.twig', []);
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
+        $this->render('login.twig', ['csrf' => $csrf]);
     }
 
     public function login()
@@ -29,24 +32,34 @@ class LoginController extends Controller
         $request = $this->app->request;
         $user    = $request->post('user');
         $pass    = $request->post('pass');
+        $csrf    = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', 'Bot?');
+            $this->render('login.twig', ['csrf' => $csrf]);
+            return;
+        }
 
         if ($this->auth->checkCredentials($user, $pass)) {
             $_SESSION['user'] = $user;
-            setcookie("user", $user);
-            setcookie("password",  $pass);
             $isAdmin = $this->auth->user()->isAdmin();
-
+            $isDoctor = $this->auth->user()->isDoctor();
             if ($isAdmin) {
-                setcookie("isadmin", "yes");
+                $_SESSION['isadmin'] = 'yes';
             } else {
-                setcookie("isadmin", "no");
+                $_SESSION["isadmin"] = 'no';
+            }
+            if ($isDoctor) {
+                $_SESSION['isdoctor'] = 'yes';
+            } else {
+                $_SESSION['isdoctor'] = 'no';
             }
 
             $this->app->flash('info', "You are now successfully logged in as $user.");
             $this->app->redirect('/');
             return;
         }
-        
+
         $this->app->flashNow('error', 'Incorrect user/pass combination.');
         $this->render('login.twig', []);
     }

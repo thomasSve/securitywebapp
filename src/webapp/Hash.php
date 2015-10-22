@@ -6,20 +6,18 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class Hash
 {
-
-    static $salt = "1234";
-
     public function __construct()
     {
     }
-    public static function make($plaintext)
+    public static function make($plaintext, $salt)
     {
-        return hash('sha256', $plaintext.Hash::$salt);
+        return hash('sha256', $plaintext, $salt);
     }
 
-    public function check($plaintext, $hash)
+    public function check($plaintext, $salt, $hash)
     {
-        return $this->make($plaintext) === $hash;
+        usleep(rand(0, 200));    //Microseconds
+        return $this->make($plaintext, $salt) === $hash;
     }
 
 }

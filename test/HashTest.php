@@ -25,9 +25,10 @@ class HashTest extends \PHPUnit_Framework_TestCase
     public function testHash()
     {
         $password = 'qwerty';
-        $hash = $this->hash->make($password);
+        $salt = 'sdfnyfg783njdsflnsfd';
+        $hash = $this->hash->make($password, $salt);
         
-        $this->assertTrue($this->hash->check($password, $hash));
+        $this->assertTrue($this->hash->check($password, $salt, $hash));
         
     }
 }

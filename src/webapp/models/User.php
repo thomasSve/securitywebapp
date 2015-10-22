@@ -5,18 +5,21 @@ namespace tdt4237\webapp\models;
 class User
 {
 
-    protected $userId  = null;
+    protected $userId = null;
     protected $username;
     protected $fullname;
     protected $address;
     protected $postcode;
     protected $hash;
-	protected $salt;
-    protected $email   = null;
-    protected $bio     = 'Bio is empty.';
+    protected $salt;
+    protected $email = null;
+    protected $bio = 'Bio is empty.';
     protected $age;
-    protected $bankcard;
     protected $isAdmin = 0;
+    protected $isDoctor = 0;
+    protected $balance = 0;
+    protected $cardNumber;
+    protected $cardNumberToDisplay;
 
     function __construct($username, $hash, $fullname, $address, $postcode, $salt)
     {
@@ -25,7 +28,7 @@ class User
         $this->fullname = $fullname;
         $this->address = $address;
         $this->postcode = $postcode;
-		$this->salt = $salt;
+        $this->salt = $salt;
     }
 
     public function getUserId()
@@ -58,31 +61,38 @@ class User
         return $this->age;
     }
 
-    public function getFullname() {
+    public function getFullname()
+    {
         return $this->fullname;
     }
 
-    public function setFullname($fullname) {
+    public function setFullname($fullname)
+    {
         $this->fullname = $fullname;
     }
 
-    public function getAddress() {
+    public function getAddress()
+    {
         return $this->address;
     }
 
-    public function setAddress($address) {
+    public function setAddress($address)
+    {
         $this->address = $address;
     }
 
-    public function getPostcode() {
+    public function getPostcode()
+    {
         return $this->postcode;
     }
-	
-	public function getSalt() {
+
+    public function getSalt()
+    {
         return $this->salt;
     }
 
-    public function setPostcode($postcode) {
+    public function setPostcode($postcode)
+    {
         $this->postcode = $postcode;
 
     }
@@ -109,8 +119,8 @@ class User
         $this->hash = $hash;
         return $this;
     }
-	
-	public function setSalt($salt)
+
+    public function setSalt($salt)
     {
         $this->salt = $salt;
         return $this;
@@ -140,4 +150,60 @@ class User
         return $this;
     }
 
+    public function setIsDoctor($isDoctor)
+    {
+        $this->isDoctor = $isDoctor;
+        return $this;
+    }
+
+    public function getIsDoctor()
+    {
+        return $this->isDoctor;
+    }
+
+    public function isDoctor()
+    {
+        return $this->isDoctor;
+    }
+
+    public function setBalance($balance){
+        $this->balance = $balance;
+        return $this;
+    }
+
+    public function getBalance(){
+        return $this->balance;
+    }
+
+    public function changeBalance($value)
+    {
+        $this->balance += $value;
+        return $this;
+    }
+
+    public function setCardNumber($cardNumber)
+    {
+        $this->cardNumber = $cardNumber;
+        return $this;
+    }
+
+    public function getCardNumber()
+    {
+        return $this->cardNumber;
+    }
+    public function setCardNumberToDisplay($cardNumber){
+        $cardToDisplay = "";
+        for($i = 0; $i < strlen($cardNumber); $i++){
+            if((strlen($cardNumber) - $i) > 4){
+                $cardToDisplay .= "*";
+            }else{
+                $cardToDisplay .= "$cardNumber[$i]";
+            }
+        }
+        $this->cardNumberToDisplay = $cardToDisplay;
+        return $this;
+    }
+    public function getCardNumberToDisplay(){
+        return $this->cardNumberToDisplay;
+    }
 }

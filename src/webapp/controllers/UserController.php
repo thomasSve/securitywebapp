@@ -7,6 +7,7 @@ use tdt4237\webapp\models\Email;
 use tdt4237\webapp\models\User;
 use tdt4237\webapp\validation\EditUserFormValidation;
 use tdt4237\webapp\validation\RegistrationFormValidation;
+use tdt4237\webapp\validation\TransferValidation;
 
 class UserController extends Controller
 {
@@ -19,7 +20,10 @@ class UserController extends Controller
     public function index()
     {
         if ($this->auth->guest()) {
-            return $this->render('newUserForm.twig', []);
+            $csrf = rand(0,10000);
+            $_SESSION['csrf'] = $csrf;
+
+            return $this->render('newUserForm.twig', ['csrf' => $csrf]);
         }
 
         $username = $this->auth->user()->getUserName();
@@ -35,11 +39,20 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrf = $request->post('csrf');
 
+        /* csrf */
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', $errors);
+            $this->render('newUserForm.twig', ['username' => $username, 'csrf' => $csrf]);
+            return;
+        }
 
         $validation = new RegistrationFormValidation($username, $password, $fullname, $address, $postcode);
 
-        if ($validation->isGoodToGo()) {
+        if ($this->userRepository->findByUser($username)) {
+            $validation->addValidationError("Username allready exists");
+        } else  if ($validation->isGoodToGo()) {
             $password = $password;
 			$salt = $this->generateSalt();
             $password = $this->hash->make($password, $salt);
@@ -52,7 +65,7 @@ class UserController extends Controller
 
         $errors = join("<br>\n", $validation->getValidationErrors());
         $this->app->flashNow('error', $errors);
-        $this->render('newUserForm.twig', ['username' => $username]);
+        $this->render('newUserForm.twig', ['username' => $username, 'csrf' => $csrf]);
     }
 	
 	public static function generateSalt($length = 10) {
@@ -63,7 +76,7 @@ class UserController extends Controller
 			$randomString .= $characters[rand(0, $charactersLength - 1)];
 		}
     return $randomString;
-}
+    }
 
     public function all()
     {
@@ -75,7 +88,7 @@ class UserController extends Controller
     public function logout()
     {
         $this->auth->logout();
-        $this->app->redirect('http://google.com');
+        $this->app->redirect('/');
     }
 
     public function show($username)
@@ -86,7 +99,6 @@ class UserController extends Controller
 
         } else {
             $user = $this->userRepository->findByUser($username);
-
             if ($user != false && $user->getUsername() == $this->auth->getUsername()) {
 
                 $this->render('showuser.twig', [
@@ -107,7 +119,11 @@ class UserController extends Controller
     {
         $this->makeSureUserIsAuthenticated();
 
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
         $this->render('edituser.twig', [
+            'csrf' => $csrf,
             'user' => $this->auth->user()
         ]);
     }
@@ -124,6 +140,13 @@ class UserController extends Controller
         $fullname = $request->post('fullname');
         $address = $request->post('address');
         $postcode = $request->post('postcode');
+        $csrf = $request->post('csrf');
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', "Bot?");
+            $this->render('edituser.twig', ['csrf' => $csrf, 'user' => $user]);
+            return;
+        }
 
         $validation = new EditUserFormValidation($email, $bio, $age);
 
@@ -150,5 +173,61 @@ class UserController extends Controller
             $this->app->flash('info', 'You must be logged in to edit your profile.');
             $this->app->redirect('/login');
         }
+    }
+    /*public function showTransferForm(){
+        $this->makeSureUserIsAuthenticated();
+
+    }
+    public function submitTransfer(){
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request = $this->app->request;
+        $value  = $request->post('value');
+
+        $validation = new TransferValidation();
+        $validation->validateTransfer($user);
+
+        if (){
+            $user->set
+        }
+
+    }*/
+    public function showCardnumberForm(){
+        $this->makeSureUserIsAuthenticated();
+
+        $csrf = rand(0,10000);
+        $_SESSION['csrf'] = $csrf;
+
+        $this->render('cardnumber.twig', [
+            'csrf' => $csrf,
+            'user' => $this->auth->user()
+        ]);
+    }
+    public function submitCardnumber()
+    {
+        $this->makeSureUserIsAuthenticated();
+        $user = $this->auth->user();
+
+        $request = $this->app->request;
+        $cardNumber = $request->post('cardnumber');
+        $csrf = $request->post('csrf');
+
+        $validation = new TransferValidation();
+        $validation->validateNewCardnumber($cardNumber);
+
+        if ($_SESSION['csrf'] != $csrf) {
+            $this->app->flashNow('error', "bot?");
+            return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
+        } else if ($validation->isGoodToGo()){
+            $user->setCardnumber($cardNumber);
+
+            $this->userRepository->saveCardNumber($user);
+
+            $this->app->flashNow('info', 'Your cardnumber was successfully saved.');
+            return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
+        }
+        $this->app->flashNow('error', join('<br>', $validation->getValidationErrors()));
+        return $this->render('cardnumber.twig', ['csrf' => $csrf, 'user' => $this->auth->user()]);
     }
 }

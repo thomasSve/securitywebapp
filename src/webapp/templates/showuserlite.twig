@@ -4,29 +4,45 @@
 
 <h2>User</h2>
 
-{{ flash.info }} <br />
-{{ flash.error }} <br />
+{{ flash.info|e('html_attr') }} <br />
+{{ flash.error|e('html_attr') }} <br />
 
 {% if user %}
     <table>
         <tr>
             <th>Id</th>
-            <th>{{ user.userid|raw }}</th>
+            <th>{{ user.userid|e('html_attr') }}</th>
             <tr></tr>
             <th>Username:</th>
-            <td>{{ user.username|raw }}</th>
+            <td>{{ user.username|e('html_attr') }}</th>
             <tr></tr>
             <th>Bio:</th>
-            <td>{{ user.bio|raw }}</td>
+            <td>{{ user.bio|e('html_attr') }}</td>
             <tr></tr>
             <th>Age:</th>
-            <td>{{ user.age|raw }}</td>
+            <td>{{ user.age|e('html_attr') }}</td>
             <tr></tr>
-        <!-- PS: RMB4P!!! {{ user.hash|raw }} --></td>
-
+            <th>Role:</th>
+            <td>
+                {% if user.isDoctor == 0%}
+                    User
+                {% else %}
+                    Doctor
+                {% endif %}
+            </td>
+            {% if isAdmin %}
+            <td>
+                {% if user.isDoctor == 0 %}
+                    <a href="/admin/doctor/add/{{ user.username|e('html_attr') }}">Set as Doctor</a>
+                {% else %}
+                    <a href="/admin/doctor/remove/{{ user.username|e('html_attr') }}">Set as user</a>
+                {% endif %}
+            </td>
+            {% endif %}
+            <tr></tr>
     </table>
 {% else %}
-    Could not find a user with username "{{ username|raw }}".
+    Could not find a user with username "{{ username|e('html_attr') }}".
 {% endif %}
 
 {% endblock %}

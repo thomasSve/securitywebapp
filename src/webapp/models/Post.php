@@ -15,11 +15,20 @@ class Post
     protected $title;
     protected $content;
     protected $date;
+    protected $ansByDoc;
+    protected $wantAnswerByDoctor;
 
+    public function getAnsByDoc() {
+        return $this->ansByDoc;
+    }
+
+    public function setAnsByDoc($answered) {
+        $this->ansByDoc = $answered;
+        return $this;
+    }
 
     public function getPostId() {
         return $this->postId;
-
     }
 
     public function setPostId($postId) {
@@ -63,9 +72,13 @@ class Post
         return $this->title;
     }
 
+    public function setWantAnswerByDoctor($oneorzero) {
+        $this->wantAnswerByDoctor = $oneorzero;
+        return $this;
+    }
 
-
-
-
+    public function getWantAnswerByDoctor() {
+        return $this->wantAnswerByDoctor;
+    }
 
 }

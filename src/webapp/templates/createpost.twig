@@ -5,16 +5,25 @@
     <h2>Create post</h2>
 
     <form action="" method="POST">
-        <div id="flasherror">{{ flash.error }}</div>
+        <input name="csrf" type="hidden" value="{{ csrf }}">
+        <div id="flasherror">{{ flash.error|e('html_attr') }}</div>
 
         <label>Title:</label>
         <input type = "text" name="title"> <br />
+
+        <label>Ask doctor? (Cost: $10):</label>
+        <select name="doctor">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select> <br />
 
         <label>Text:</label>
         <textarea cols="40" rows="10" name="content"> </textarea><br />
 
         <label>Author:</label>
-        {{username}}<br />
+        {{username|e('html_attr')}}<br />
+
+
         <input type="submit" name="submit" value="Create post">
     </form>
 {% endblock %}
